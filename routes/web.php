@@ -42,6 +42,14 @@ Route::prefix('admin')
         // User Management (Permission: manage_roles)
         Route::get('/users', \App\Livewire\Admin\ManageUsers::class)->middleware('permission:manage_roles')->name('users');
 
+        // Property Management (Create & Edit)
+        Route::get('/properties/create', \App\Livewire\Admin\ManagePropertyForm::class)
+            ->middleware('permission:create_properties')
+            ->name('properties.create');
+        Route::get('/properties/{propertyId}/edit', \App\Livewire\Admin\ManagePropertyForm::class)
+            ->middleware('permission:edit_properties')
+            ->name('properties.edit');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
