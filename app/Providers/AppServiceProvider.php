@@ -25,5 +25,10 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
             return $user->hasRole('Super Admin') ? true : null;
         });
+
+        // Define rate limiter for lead submissions (5 requests per minute per IP)
+        \Illuminate\Support\Facades\RateLimiter::for('inquiries', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
+        });
     }
 }

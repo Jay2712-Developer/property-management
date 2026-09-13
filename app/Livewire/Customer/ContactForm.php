@@ -4,6 +4,7 @@ namespace App\Livewire\Customer;
 
 use App\Models\ContactInquiry;
 use App\Traits\LogsActivity;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -30,6 +31,16 @@ class ContactForm extends Component
 
     public function submit(): void
     {
+        $throttleKey = 'contact-inquiry:' . request()->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('email', "Too many inquiry submissions. Please wait {$seconds} seconds before trying again.");
+            return;
+        }
+
+        RateLimiter::hit($throttleKey, 60);
+
         $this->validate();
 
         if (class_exists(ContactInquiry::class)) {

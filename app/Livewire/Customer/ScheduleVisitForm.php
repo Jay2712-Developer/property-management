@@ -5,6 +5,7 @@ namespace App\Livewire\Customer;
 use App\Models\Property;
 use App\Models\VisitRequest;
 use App\Traits\LogsActivity;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -36,6 +37,16 @@ class ScheduleVisitForm extends Component
 
     public function submit(): void
     {
+        $throttleKey = 'schedule-visit:' . request()->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('email', "Too many visit requests submitted. Please wait {$seconds} seconds.");
+            return;
+        }
+
+        RateLimiter::hit($throttleKey, 60);
+
         $this->validate();
 
         $property = Property::find($this->propertyId);
