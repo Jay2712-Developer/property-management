@@ -123,16 +123,20 @@
                         {{-- Price --}}
                         <div>
                             <label for="price" class="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
-                                Price ($) <span class="text-[#FF6B35]">*</span>
+                                Price (₹) <span class="text-[#FF6B35]">*</span>
                             </label>
                             <div class="relative">
-                                <span class="absolute left-3.5 top-2.5 text-gray-400 font-bold">$</span>
+                                <span class="absolute left-3.5 top-2.5 text-gray-400 font-bold">₹</span>
                                 <input type="number" step="0.01" id="price" wire:model="price"
-                                       placeholder="1250000"
+                                       placeholder="24500000"
                                        class="w-full pl-8 pr-4 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-400 focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20 focus:outline-none transition">
                             </div>
+                            <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1">
+                                Enter amount in Rupees &mdash; e.g. <strong class="text-gray-600 dark:text-gray-300">24500000</strong> for ₹2.45 Cr &nbsp;|&nbsp; <strong class="text-gray-600 dark:text-gray-300">4500000</strong> for ₹45.00 L
+                            </p>
                             @error('price') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
+
 
                         {{-- Price Label --}}
                         <div>

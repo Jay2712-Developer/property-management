@@ -60,10 +60,15 @@ class HasEncryptedRouteKeyTest extends TestCase
         $this->assertEquals($property->hashid, $routeKey);
 
         // 3. Test URL generation using route helper
-        $this->app['router']->get('/test/properties/{property}', function (Property $property) {
-            return response()->json(['id' => $property->id, 'title' => $property->title]);
-        })->middleware(\Illuminate\Routing\Middleware\SubstituteBindings::class)->name('test.properties.show');
-        $this->app['router']->getRoutes()->refreshNameLookups();
+        //    Dynamically register a test-only route and bind it immediately.
+        Route::middleware(\Illuminate\Routing\Middleware\SubstituteBindings::class)
+            ->get('/test/properties/{property}', function (Property $property) {
+                return response()->json(['id' => $property->id, 'title' => $property->title]);
+            })
+            ->name('test.properties.show');
+
+        app()->make(\Illuminate\Routing\Router::class)->getRoutes()->refreshNameLookups();
+        app()->make(\Illuminate\Routing\Router::class)->getRoutes()->refreshActionLookups();
 
         $url = route('test.properties.show', $property);
         $this->assertStringContainsString('/test/properties/' . $property->hashid, $url);

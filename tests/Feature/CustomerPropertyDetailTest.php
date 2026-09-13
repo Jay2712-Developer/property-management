@@ -76,7 +76,7 @@ class CustomerPropertyDetailTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('The Imperial Waterfront Palace');
-        $response->assertSee('32,000,000');
+        $response->assertSee('₹3.20 Cr');
         $response->assertSee('Palm Jumeirah');
         $response->assertSee('7');
         $response->assertSee('Bedrooms');

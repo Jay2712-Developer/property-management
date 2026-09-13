@@ -39,6 +39,7 @@ class Property extends Model implements HasMedia
     protected $appends = [
         'hashid',
         'primary_image_url',
+        'formatted_price',
     ];
 
     protected function casts(): array
@@ -101,6 +102,14 @@ class Property extends Model implements HasMedia
     public function primaryImage(): HasOne
     {
         return $this->hasOne(PropertyImage::class)->where('is_primary', true);
+    }
+
+    /**
+     * Accessor: Price formatted for Indian currency display (e.g. ₹2.45 Cr, ₹45.50 L, ₹85,000).
+     */
+    public function getFormattedPriceAttribute(): string
+    {
+        return formatIndianCurrency($this->price);
     }
 
     /**

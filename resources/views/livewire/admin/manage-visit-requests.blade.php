@@ -84,7 +84,7 @@
                                     <span class="block truncate" title="{{ $visit->property->title }}">{{ $visit->property->title }}</span>
                                     <span class="text-[11px] text-gray-400 font-normal">
                                         @if($visit->property->price)
-                                            ${{ number_format($visit->property->price) }}
+                                            {{ $visit->property->formatted_price }}
                                         @endif
                                     </span>
                                 @else
@@ -250,7 +250,7 @@
                         </div>
                         @if($selectedVisit->property?->price)
                             <div class="text-xs font-semibold text-[#FF6B35] mt-0.5">
-                                ${{ number_format($selectedVisit->property->price) }}
+                                {{ $selectedVisit->property->formatted_price }}
                             </div>
                         @endif
                     </div>

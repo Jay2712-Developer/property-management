@@ -105,7 +105,7 @@ class ManagePropertiesTest extends TestCase
             ->assertSeeLivewire(ManageProperties::class)
             ->assertSee('Property Portfolio')
             ->assertSee('Coastal Luxury Villa')
-            ->assertSee('$3,200,000');
+            ->assertSee('₹32.00 L');
     }
 
     public function test_search_filter_filters_properties_by_title(): void

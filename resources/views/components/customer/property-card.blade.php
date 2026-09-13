@@ -1,10 +1,6 @@
 @props(['property'])
 
 @php
-    $currency = class_exists(\App\Models\SiteSetting::class) && \Illuminate\Support\Facades\Schema::hasTable('site_settings')
-        ? \App\Models\SiteSetting::getValue('currency_symbol', '$')
-        : '$';
-
     // 1. Primary Image Resolution
     $imageUrl = null;
     if (method_exists($property, 'getFirstMediaUrl') && $property->getFirstMediaUrl('images')) {
@@ -37,7 +33,7 @@
         ? 'bg-[#1A1A1A] text-white border border-gray-700' 
         : 'bg-[#FF6B35] text-white shadow-md shadow-[#FF6B35]/30';
 
-    $formattedPrice = number_format((float) $property->price, 0);
+    $formattedPrice = $property->formatted_price;
     $detailUrl = Route::has('property.show') 
         ? route('property.show', $property->id) 
         : url('/properties/' . $property->id);
@@ -76,8 +72,7 @@
 
         {{-- Bottom Right: Price Badge On Image --}}
         <div class="absolute bottom-3 right-3 px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md text-white border border-white/10 shadow-lg flex items-baseline gap-1 pointer-events-none">
-            <span class="text-xs font-bold text-[#FF6B35]">{{ $currency }}</span>
-            <span class="text-base font-extrabold tracking-tight">{{ $formattedPrice }}</span>
+            <span class="text-sm font-extrabold tracking-tight text-white">{{ $formattedPrice }}</span>
             @if($property->price_label)
                 <span class="text-[10px] font-medium text-gray-300">/ {{ $property->price_label }}</span>
             @endif

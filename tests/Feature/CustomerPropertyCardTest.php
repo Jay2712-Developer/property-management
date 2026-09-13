@@ -62,7 +62,7 @@ class CustomerPropertyCardTest extends TestCase
         $this->assertStringContainsString('Penthouse', $rendered);
 
         // 4. Bottom Right Price on image
-        $this->assertStringContainsString('7,850,000', $rendered);
+        $this->assertStringContainsString('₹78.50 L', $rendered);
 
         // 5. Content: Title and Location with icon
         $this->assertStringContainsString('Skyline Luxury Penthouse', $rendered);

@@ -92,7 +92,7 @@ class CustomerHomePageTest extends TestCase
 
         Livewire::test(FeaturedProperties::class)
             ->assertSee('Signature Palm Waterfront Villa')
-            ->assertSee('18,500,000')
+            ->assertSee('₹1.85 Cr')
             ->assertSee('Palm Jumeirah')
             ->assertSee('6')
             ->assertSee('Beds')

@@ -1,8 +1,4 @@
 @php
-    $currency = class_exists(\App\Models\SiteSetting::class) && \Illuminate\Support\Facades\Schema::hasTable('site_settings')
-        ? \App\Models\SiteSetting::getValue('currency_symbol', '$')
-        : '$';
-
     // 1. Resolve Gallery Images
     $galleryImages = collect();
 
@@ -123,9 +119,8 @@
                     <span class="text-xs uppercase font-bold tracking-wider text-gray-400 block">
                         Offering Price
                     </span>
-                    <div class="text-3xl sm:text-4xl font-black text-[#FF6B35] flex items-baseline lg:justify-end gap-1 mt-1">
-                        <span class="text-xl font-bold text-gray-950 dark:text-white">{{ $currency }}</span>
-                        <span>{{ number_format((float) $property->price, 0) }}</span>
+                    <div class="text-3xl sm:text-4xl font-black text-[#FF6B35] flex items-baseline lg:justify-end gap-2 mt-1">
+                        <span>{{ $property->formatted_price }}</span>
                         @if($property->price_label)
                             <span class="text-xs font-medium text-gray-500 dark:text-gray-400">/ {{ $property->price_label }}</span>
                         @endif

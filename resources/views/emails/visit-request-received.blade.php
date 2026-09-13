@@ -137,7 +137,7 @@
                     @if($property->price)
                         <tr>
                             <td class="label">Listing Price</td>
-                            <td class="value">${{ number_format($property->price, 0) }}</td>
+                            <td class="value">{{ formatIndianCurrency($property->price) }}</td>
                         </tr>
                     @endif
                 @endif

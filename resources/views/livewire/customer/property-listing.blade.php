@@ -94,28 +94,29 @@
         {{-- Row 2: Price Range & Sort Bar --}}
         <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/80 flex flex-col md:flex-row items-center justify-between gap-4">
             
-            {{-- Price Inputs --}}
+            {{-- Price Inputs (raw INR integers; display uses ₹ symbol) --}}
             <div class="flex items-center gap-2 w-full md:w-auto">
-                <div class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 dark:bg-[#262626] border border-gray-200 dark:border-gray-800 text-xs text-gray-700 dark:text-gray-300 w-full sm:w-40">
-                    <span class="text-[#FF6B35] font-bold">$</span>
+                <div class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 dark:bg-[#262626] border border-gray-200 dark:border-gray-800 text-xs text-gray-700 dark:text-gray-300 w-full sm:w-44">
+                    <span class="text-[#FF6B35] font-bold shrink-0">₹</span>
                     <input 
                         type="number" 
                         wire:model.live.debounce.400ms="min_price" 
-                        placeholder="Min Price"
+                        placeholder="Min (e.g. 5000000)"
                         class="w-full bg-transparent text-xs focus:outline-none"
                     >
                 </div>
-                <span class="text-gray-400 text-xs font-bold">-</span>
-                <div class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 dark:bg-[#262626] border border-gray-200 dark:border-gray-800 text-xs text-gray-700 dark:text-gray-300 w-full sm:w-40">
-                    <span class="text-[#FF6B35] font-bold">$</span>
+                <span class="text-gray-400 text-xs font-bold">–</span>
+                <div class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 dark:bg-[#262626] border border-gray-200 dark:border-gray-800 text-xs text-gray-700 dark:text-gray-300 w-full sm:w-44">
+                    <span class="text-[#FF6B35] font-bold shrink-0">₹</span>
                     <input 
                         type="number" 
                         wire:model.live.debounce.400ms="max_price" 
-                        placeholder="Max Price"
+                        placeholder="Max (e.g. 50000000)"
                         class="w-full bg-transparent text-xs focus:outline-none"
                     >
                 </div>
             </div>
+
 
             {{-- Right: Sort Order & Reset Button --}}
             <div class="flex items-center justify-between sm:justify-end gap-3 w-full md:w-auto">

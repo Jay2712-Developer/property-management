@@ -241,7 +241,7 @@
 
                             {{-- Price --}}
                             <td class="py-3.5 px-4 text-sm font-extrabold text-gray-900 dark:text-white">
-                                ${{ number_format($property->price) }}
+                                {{ $property->formatted_price }}
                                 @if($property->price_label)
                                     <span class="block text-[10px] font-normal text-gray-400">
                                         {{ $property->price_label }}
