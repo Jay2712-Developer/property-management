@@ -31,15 +31,7 @@ class ViewServiceProvider extends ServiceProvider
             'customer.*',
             'welcome',
         ], function ($view) {
-            $settings = [];
-
-            if (class_exists(SiteSetting::class) && Schema::hasTable('site_settings')) {
-                try {
-                    $settings = SiteSetting::pluck('value', 'key')->toArray();
-                } catch (\Throwable $e) {
-                    $settings = [];
-                }
-            }
+            $settings = \App\Services\CacheService::getSiteSettings();
 
             // Defaults and aliases
             $settings['site_name'] = $settings['site_name'] ?? 'TISHA Real Estate';

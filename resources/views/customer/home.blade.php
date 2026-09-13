@@ -1,18 +1,7 @@
 @php
-    $hasTypes = class_exists(\App\Models\PropertyType::class) && \Illuminate\Support\Facades\Schema::hasTable('property_types');
-    $types = $hasTypes 
-        ? \App\Models\PropertyType::where('is_active', true)->get() 
-        : collect();
-
-    $hasStatuses = class_exists(\App\Models\PropertyStatus::class) && \Illuminate\Support\Facades\Schema::hasTable('property_statuses');
-    $statuses = $hasStatuses 
-        ? \App\Models\PropertyStatus::all() 
-        : collect();
-
-    $hasLocations = class_exists(\App\Models\Location::class) && \Illuminate\Support\Facades\Schema::hasTable('locations');
-    $locations = $hasLocations 
-        ? \App\Models\Location::where('is_active', true)->take(10)->get() 
-        : collect();
+    $types = \App\Services\CacheService::getPropertyTypes();
+    $statuses = \App\Services\CacheService::getPropertyStatuses();
+    $locations = \App\Services\CacheService::getLocations()->take(10);
 
     $hasProperties = class_exists(\App\Models\Property::class) && \Illuminate\Support\Facades\Schema::hasTable('properties');
     $totalProperties = $hasProperties 

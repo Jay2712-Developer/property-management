@@ -171,6 +171,7 @@ class ManagePropertyTypes extends Component
         }
 
         $this->closeTypeModal();
+        \Illuminate\Support\Facades\Cache::forget('property_types');
         session()->flash('status', $message);
     }
 
@@ -191,6 +192,8 @@ class ManagePropertyTypes extends Component
         $type->update([
             'is_active' => !$type->is_active,
         ]);
+
+        \Illuminate\Support\Facades\Cache::forget('property_types');
 
         $statusLabel = $type->is_active ? 'Active' : 'Inactive';
         ActivityLog::record("Property type '{$type->name}' status changed to {$statusLabel}", 'Properties', $type->id);
@@ -256,6 +259,8 @@ class ManagePropertyTypes extends Component
         }
 
         $type->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('property_types');
 
         ActivityLog::record("Deleted property type '{$name}'", 'Properties', null);
 

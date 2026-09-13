@@ -165,13 +165,8 @@ class PropertyListing extends Component
 
         $properties = $query->paginate(6);
 
-        $locations = Schema::hasTable('locations')
-            ? Location::where('is_active', true)->orderBy('name')->get()
-            : collect();
-
-        $types = Schema::hasTable('property_types')
-            ? PropertyType::where('is_active', true)->orderBy('name')->get()
-            : collect();
+        $locations = \App\Services\CacheService::getLocations();
+        $types = \App\Services\CacheService::getPropertyTypes();
 
         return view('livewire.customer.property-listing', [
             'properties' => $properties,

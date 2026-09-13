@@ -6,8 +6,11 @@
     $siteName = $settings['site_name'] ?? 'TISHA Real Estate';
 @endphp
 
+@section('meta_title', 'Contact Our Concierge & Advisory Team | TISHA Real Estate')
+@section('meta_description', 'Get in touch with TISHA Real Estate for private luxury home acquisitions, villa listings, and confidential property advisory in Dubai.')
+
 <x-layouts.customer 
-    title="Contact Our Concierge & Advisory Team - TISHA Real Estate"
+    title="Contact Our Concierge & Advisory Team | TISHA Real Estate"
     metaDescription="Get in touch with TISHA Real Estate for private luxury home acquisitions, villa listings, and confidential property advisory in Dubai."
 >
     {{-- ====================================================================== --}}

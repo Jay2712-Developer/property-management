@@ -47,8 +47,13 @@
     $agentPhoto = $agent?->photo_path ? asset('storage/' . $agent->photo_path) : null;
 @endphp
 
+@section('meta_title', $property->title . ' | TISHA Real Estate')
+@section('meta_description', substr(strip_tags($property->description ?? 'Exclusive luxury property with TISHA Real Estate.'), 0, 155))
+@section('og_image', $initialImage)
+@section('og_type', 'article')
+
 <x-layouts.customer 
-    :title="$property->title . ' - TISHA Real Estate'"
+    :title="$property->title . ' | TISHA Real Estate'"
     :metaDescription="substr(strip_tags($property->description ?? 'Exclusive luxury property with TISHA Real Estate.'), 0, 155)"
 >
     <div 
@@ -137,6 +142,7 @@
                     <img 
                         :src="activeImage" 
                         alt="{{ $property->title }}" 
+                        loading="lazy"
                         class="w-full h-full object-cover object-center transition-all duration-300"
                     >
                     
@@ -169,7 +175,7 @@
                                 class="relative w-24 sm:w-28 h-20 rounded-2xl overflow-hidden shrink-0 border-2 transition-all duration-200"
                                 :class="activeImageIndex === {{ $idx }} ? 'border-[#FF6B35] ring-2 ring-[#FF6B35]/30' : 'border-transparent opacity-70 hover:opacity-100'"
                             >
-                                <img src="{{ $imgUrl }}" alt="Thumbnail {{ $idx + 1 }}" class="w-full h-full object-cover">
+                                <img src="{{ $imgUrl }}" alt="Thumbnail {{ $idx + 1 }}" loading="lazy" class="w-full h-full object-cover">
                             </button>
                         @endforeach
                     </div>
@@ -309,6 +315,7 @@
                                 <img 
                                     src="{{ $agentPhoto }}" 
                                     alt="{{ $agentName }}" 
+                                    loading="lazy"
                                     class="w-16 h-16 rounded-2xl object-cover border-2 border-[#FF6B35]/40 shadow-md"
                                 >
                             @else

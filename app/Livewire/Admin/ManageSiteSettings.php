@@ -138,6 +138,7 @@ class ManageSiteSettings extends Component
 
         $this->current_logo = null;
         $this->logo = null;
+        \Illuminate\Support\Facades\Cache::forget('site_settings');
         session()->flash('status', 'Site logo removed successfully.');
     }
 
@@ -159,6 +160,7 @@ class ManageSiteSettings extends Component
 
         $this->current_favicon = null;
         $this->favicon = null;
+        \Illuminate\Support\Facades\Cache::forget('site_settings');
         session()->flash('status', 'Site favicon removed successfully.');
     }
 
@@ -242,6 +244,8 @@ class ManageSiteSettings extends Component
         }
 
         ActivityLog::record("Updated site configuration settings", 'Settings', null);
+
+        \Illuminate\Support\Facades\Cache::forget('site_settings');
 
         session()->flash('status', 'Site settings have been successfully updated and saved.');
     }

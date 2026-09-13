@@ -16,9 +16,13 @@
         ? \App\Models\Agent::active()->get() 
         : collect();
 
-    $pageTitle = $page?->meta_title ?? ($page?->title ?? 'About Us') . ' - TISHA Real Estate';
+    $baseTitle = $page?->meta_title ?: ($page?->title ?: 'About Us');
+    $pageTitle = str_contains($baseTitle, 'TISHA') ? $baseTitle : $baseTitle . ' | TISHA Real Estate';
     $metaDescription = $page?->meta_description ?? 'Learn about TISHA Real Estate, our legacy of luxury brokerage, client discretion, and our premier property specialists.';
 @endphp
+
+@section('meta_title', $pageTitle)
+@section('meta_description', $metaDescription)
 
 <x-layouts.customer 
     :title="$pageTitle"
@@ -136,6 +140,7 @@
                         <img 
                             src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" 
                             alt="TISHA Luxury Property Architecture" 
+                            loading="lazy"
                             class="w-full h-[460px] object-cover group-hover:scale-105 transition-transform duration-700"
                         >
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-8 text-white">
@@ -283,6 +288,7 @@
                             <img 
                                 src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80" 
                                 alt="Alexander Vance" 
+                                loading="lazy"
                                 class="w-full h-full object-cover"
                             >
                             <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider">
@@ -302,6 +308,7 @@
                             <img 
                                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" 
                                 alt="Elena Rostova" 
+                                loading="lazy"
                                 class="w-full h-full object-cover"
                             >
                             <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider">
@@ -321,6 +328,7 @@
                             <img 
                                 src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80" 
                                 alt="Tariq Mansoor" 
+                                loading="lazy"
                                 class="w-full h-full object-cover"
                             >
                             <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider">

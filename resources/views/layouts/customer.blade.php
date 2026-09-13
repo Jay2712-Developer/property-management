@@ -13,8 +13,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? config('app.name', 'TISHA Real Estate') }} - Luxury Properties & Real Estate</title>
-    <meta name="description" content="{{ $metaDescription ?? 'Discover exclusive luxury homes, modern penthouses, and prime estates with TISHA Real Estate.' }}">
+    <title>@hasSection('meta_title')@yield('meta_title')@else{{ $title ?? config('app.name', 'TISHA Real Estate') . ' - Luxury Properties & Real Estate' }}@endif</title>
+    <meta name="title" content="@hasSection('meta_title')@yield('meta_title')@else{{ $title ?? config('app.name', 'TISHA Real Estate') }}@endif">
+    <meta name="description" content="@hasSection('meta_description')@yield('meta_description')@else{{ $metaDescription ?? ($settings['site_tagline'] ?? 'Discover exclusive luxury homes, modern penthouses, and prime estates with TISHA Real Estate.') }}@endif">
+    <link rel="canonical" href="@yield('canonical_url', url()->current())">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:url" content="@yield('canonical_url', url()->current())">
+    <meta property="og:title" content="@hasSection('meta_title')@yield('meta_title')@else{{ $title ?? config('app.name', 'TISHA Real Estate') }}@endif">
+    <meta property="og:description" content="@hasSection('meta_description')@yield('meta_description')@else{{ $metaDescription ?? ($settings['site_tagline'] ?? 'Discover exclusive luxury homes, modern penthouses, and prime estates with TISHA Real Estate.') }}@endif">
+    <meta property="og:image" content="@yield('og_image', !empty($settings['site_logo']) ? asset('uploads/settings/' . $settings['site_logo']) : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80')">
+    <meta property="og:site_name" content="{{ $settings['site_name'] ?? 'TISHA Real Estate' }}">
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="@yield('canonical_url', url()->current())">
+    <meta name="twitter:title" content="@hasSection('meta_title')@yield('meta_title')@else{{ $title ?? config('app.name', 'TISHA Real Estate') }}@endif">
+    <meta name="twitter:description" content="@hasSection('meta_description')@yield('meta_description')@else{{ $metaDescription ?? ($settings['site_tagline'] ?? 'Discover exclusive luxury homes, modern penthouses, and prime estates with TISHA Real Estate.') }}@endif">
+    <meta name="twitter:image" content="@yield('og_image', !empty($settings['site_logo']) ? asset('uploads/settings/' . $settings['site_logo']) : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80')">
 
     <!-- Inline Dark Mode check to prevent flash of light theme -->
     <script>

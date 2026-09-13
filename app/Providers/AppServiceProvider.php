@@ -30,5 +30,18 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\RateLimiter::for('inquiries', function (\Illuminate\Http\Request $request) {
             return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($request->ip());
         });
+
+        // Automatic cache invalidation on model changes (24h cache lifecycle)
+        \App\Models\SiteSetting::saved(fn () => \Illuminate\Support\Facades\Cache::forget('site_settings'));
+        \App\Models\SiteSetting::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('site_settings'));
+
+        \App\Models\PropertyType::saved(fn () => \Illuminate\Support\Facades\Cache::forget('property_types'));
+        \App\Models\PropertyType::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('property_types'));
+
+        \App\Models\PropertyStatus::saved(fn () => \Illuminate\Support\Facades\Cache::forget('property_statuses'));
+        \App\Models\PropertyStatus::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('property_statuses'));
+
+        \App\Models\Location::saved(fn () => \Illuminate\Support\Facades\Cache::forget('locations'));
+        \App\Models\Location::deleted(fn () => \Illuminate\Support\Facades\Cache::forget('locations'));
     }
 }

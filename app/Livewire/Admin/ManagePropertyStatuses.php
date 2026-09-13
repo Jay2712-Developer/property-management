@@ -162,6 +162,7 @@ class ManagePropertyStatuses extends Component
         }
 
         $this->closeStatusModal();
+        \Illuminate\Support\Facades\Cache::forget('property_statuses');
         session()->flash('status', $message);
     }
 
@@ -236,6 +237,8 @@ class ManagePropertyStatuses extends Component
         }
 
         $status->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('property_statuses');
 
         ActivityLog::record("Deleted property status '{$name}'", 'Properties', null);
 

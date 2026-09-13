@@ -195,6 +195,7 @@ class ManageLocations extends Component
         }
 
         $this->closeLocationModal();
+        \Illuminate\Support\Facades\Cache::forget('locations');
         session()->flash('status', $message);
     }
 
@@ -215,6 +216,8 @@ class ManageLocations extends Component
         $location->update([
             'is_active' => !$location->is_active,
         ]);
+
+        \Illuminate\Support\Facades\Cache::forget('locations');
 
         $statusLabel = $location->is_active ? 'Active' : 'Inactive';
         ActivityLog::record("Location '{$location->name}' status changed to {$statusLabel}", 'Properties', $location->id);
@@ -288,6 +291,8 @@ class ManageLocations extends Component
         }
 
         $location->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('locations');
 
         ActivityLog::record("Deleted location '{$name}'", 'Properties', null);
 
