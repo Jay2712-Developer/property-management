@@ -14,7 +14,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use PragmaRX\Google2FA\Google2FA;
 
-#[Layout('components.layouts.app')]
+#[Layout('admin.layouts.app')]
 #[Title('Two-Factor Security - TISHA Real Estate')]
 class TwoFactorSettings extends Component
 {

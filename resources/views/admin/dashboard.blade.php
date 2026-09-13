@@ -1,47 +1,90 @@
-<x-layouts.app :title="'Admin Dashboard - TISHA Real Estate'">
-    <div class="min-h-screen bg-slate-950 text-slate-100">
-        <!-- Top Nav -->
-        <nav class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+@extends('admin.layouts.app')
+
+@section('content')
+<div class="space-y-8">
+    <!-- Welcome Banner with TISHA Brand Palette -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1A1A1A] via-gray-900 to-[#1A1A1A] p-8 text-white shadow-xl border border-gray-800">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 rounded-full bg-[#FF6B35]/10 blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FF6B35]/20 text-[#FF6B35] border border-[#FF6B35]/30 mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse"></span>
+                    TISHA REALTY HQ
+                </span>
+                <h1 class="text-3xl font-extrabold tracking-tight">
+                    Welcome back, {{ auth()->user()->name }}! 👋
+                </h1>
+                <p class="mt-1 text-sm text-gray-400">
+                    Here is what is happening across your luxury properties and listings today.
+                </p>
+            </div>
+
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center font-black text-slate-950">
-                    T
-                </div>
-                <div>
-                    <h1 class="text-base font-bold text-white leading-none">TISHA Real Estate</h1>
-                    <span class="text-xs text-teal-400 font-medium">Admin Control Panel</span>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <a href="{{ route('admin.profile.2fa') }}" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200 transition flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                    </svg>
-                    2FA Security
+                <a 
+                    href="{{ route('admin.profile.2fa') }}" 
+                    wire:navigate
+                    class="px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 {{ auth()->user()->hasTwoFactorEnabled() ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20' }}"
+                >
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>{{ auth()->user()->hasTwoFactorEnabled() ? '2FA Enabled' : 'Enable 2FA' }}</span>
                 </a>
-
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button type="submit" class="px-3.5 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-semibold rounded-lg transition">
-                        Sign Out
-                    </button>
-                </form>
             </div>
-        </nav>
+        </div>
+    </div>
 
-        <!-- Dashboard Content -->
-        <main class="max-w-7xl mx-auto px-6 py-10 space-y-8">
-            <div class="bg-gradient-to-r from-teal-950/40 via-slate-900 to-slate-900 border border-teal-900/30 rounded-3xl p-8 shadow-xl">
-                <h2 class="text-2xl font-bold text-white">Welcome back, {{ auth()->user()->name }}!</h2>
-                <p class="text-sm text-slate-400 mt-1">Logged in with roles: <span class="text-teal-400 font-semibold">{{ auth()->user()->roles->pluck('name')->implode(', ') ?: 'No Role Assigned' }}</span></p>
-
-                <div class="mt-6 flex gap-3">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium {{ auth()->user()->hasTwoFactorEnabled() ? 'bg-teal-500/10 text-teal-400 border border-teal-500/30' : 'bg-amber-500/10 text-amber-400 border border-amber-500/30' }}">
-                        <span class="w-1.5 h-1.5 rounded-full {{ auth()->user()->hasTwoFactorEnabled() ? 'bg-teal-400' : 'bg-amber-400' }}"></span>
-                        {{ auth()->user()->hasTwoFactorEnabled() ? '2FA Protection Active' : '2FA Recommended' }}
-                    </span>
+    <!-- Metric KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Total Properties -->
+        <div class="bg-white dark:bg-[#1A1A1A] rounded-2xl p-6 border border-gray-200 dark:border-gray-800/80 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Properties</span>
+                <div class="w-10 h-10 rounded-xl bg-[#FF6B35]/10 text-[#FF6B35] flex items-center justify-center">
+                    <i class="fa-solid fa-city text-sm"></i>
                 </div>
             </div>
-        </main>
+            <p class="text-2xl font-extrabold text-gray-900 dark:text-white mt-3">24</p>
+            <p class="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
+                <i class="fa-solid fa-arrow-trend-up"></i> +12% from last month
+            </p>
+        </div>
+
+        <!-- Registered Agents -->
+        <div class="bg-white dark:bg-[#1A1A1A] rounded-2xl p-6 border border-gray-200 dark:border-gray-800/80 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Agents</span>
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                    <i class="fa-solid fa-user-tie text-sm"></i>
+                </div>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900 dark:text-white mt-3">8</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Licensed realtors</p>
+        </div>
+
+        <!-- Inquiries -->
+        <div class="bg-white dark:bg-[#1A1A1A] rounded-2xl p-6 border border-gray-200 dark:border-gray-800/80 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Inquiries</span>
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
+                    <i class="fa-regular fa-envelope text-sm"></i>
+                </div>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900 dark:text-white mt-3">15</p>
+            <p class="text-xs text-emerald-500 font-semibold mt-1 flex items-center gap-1">
+                <i class="fa-solid fa-bell"></i> 4 new pending replies
+            </p>
+        </div>
+
+        <!-- Visit Requests -->
+        <div class="bg-white dark:bg-[#1A1A1A] rounded-2xl p-6 border border-gray-200 dark:border-gray-800/80 shadow-sm hover:shadow-md transition">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Visit Requests</span>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+                    <i class="fa-regular fa-calendar-check text-sm"></i>
+                </div>
+            </div>
+            <p class="text-2xl font-extrabold text-gray-900 dark:text-white mt-3">6</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Scheduled this week</p>
+        </div>
     </div>
-</x-layouts.app>
+</div>
+@endsection
