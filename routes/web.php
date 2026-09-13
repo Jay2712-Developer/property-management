@@ -68,6 +68,17 @@ Route::prefix('admin')
             ->middleware('permission:view_amenities')
             ->name('amenities.index');
 
+        // Agent & Team Management (STRICT permissions)
+        Route::get('/agents', \App\Livewire\Admin\ManageAgents::class)
+            ->middleware('permission:view_agents')
+            ->name('agents.index');
+        Route::get('/agents/create', \App\Livewire\Admin\ManageAgentForm::class)
+            ->middleware('permission:create_agents')
+            ->name('agents.create');
+        Route::get('/agents/{agentId}/edit', \App\Livewire\Admin\ManageAgentForm::class)
+            ->middleware('permission:edit_agents')
+            ->name('agents.edit');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();

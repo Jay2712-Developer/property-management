@@ -116,7 +116,6 @@ class RoleAndPermissionSeeder extends Seeder
             'reply_inquiries',
             'view_visits',
             'manage_visits',
-            'view_agents',
             'view_testimonials',
         ]);
 
