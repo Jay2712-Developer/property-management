@@ -67,6 +67,7 @@ class RoleAndPermissionSeeder extends Seeder
                 'edit_pages',
                 'delete_pages',
                 'manage_pages',
+                'manage_media',
             ],
             'Administration & System' => [
                 'manage_roles',

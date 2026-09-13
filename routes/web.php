@@ -104,6 +104,11 @@ Route::prefix('admin')
             ->middleware('permission:view_pages')
             ->name('pages.index');
 
+        // Media Manager
+        Route::get('/media', \App\Livewire\Admin\MediaManager::class)
+            ->middleware('permission:manage_media')
+            ->name('media.index');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();

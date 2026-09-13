@@ -292,7 +292,8 @@
                         <span>Custom Pages</span>
                     </a>
                     <a 
-                        href="{{ url('/admin/media') }}" 
+                        href="{{ route('admin.media.index') }}" 
+                        wire:navigate
                         class="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
                     >
                         <i class="fa-regular fa-images text-[10px]"></i>
