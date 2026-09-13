@@ -52,6 +52,13 @@ Route::prefix('admin')
         Route::get('/properties/{propertyId}/edit', \App\Livewire\Admin\ManagePropertyForm::class)
             ->middleware('permission:edit_properties')
             ->name('properties.edit');
+        // Property Types & Statuses Management
+        Route::get('/property-types', \App\Livewire\Admin\ManagePropertyTypes::class)
+            ->middleware('permission:view_property_types')
+            ->name('property-types.index');
+        Route::get('/property-statuses', \App\Livewire\Admin\ManagePropertyStatuses::class)
+            ->middleware('permission:view_property_statuses')
+            ->name('property-statuses.index');
 
         // Admin Logout
         Route::post('/logout', function () {
