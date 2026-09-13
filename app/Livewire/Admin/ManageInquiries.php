@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\ActivityLog;
+use App\Models\Agent;
 use App\Models\ContactInquiry;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Layout;
@@ -20,6 +21,9 @@ class ManageInquiries extends Component
     public string $search = '';
     public string $statusFilter = '';
 
+    // Agent scoping
+    public ?int $agentId = null;
+
     // Delete Modal State
     public bool $showDeleteModal = false;
     public ?int $inquiryToDeleteId = null;
@@ -29,6 +33,24 @@ class ManageInquiries extends Component
     // Details Modal State
     public bool $showDetailsModal = false;
     public ?ContactInquiry $selectedInquiry = null;
+
+    /**
+     * Resolve the linked agent ID if authenticated user has role 'Agent'.
+     */
+    protected function getAgentId(): ?int
+    {
+        $user = auth()->user();
+        if ($user && $user->hasRole('Agent') && !$user->hasRole(['Super Admin', 'Admin', 'Manager'])) {
+            $agent = $user->getLinkedAgent();
+            return $agent ? $agent->id : -1;
+        }
+        return null;
+    }
+
+    public function mount(): void
+    {
+        $this->agentId = $this->getAgentId();
+    }
 
     public function updatingSearch(): void
     {
@@ -52,7 +74,14 @@ class ManageInquiries extends Component
         );
 
         $id = ContactInquiry::decodeHashid($hashid);
-        $this->selectedInquiry = ContactInquiry::findOrFail($id);
+        $inquiry = ContactInquiry::with('assignedAgent')->findOrFail($id);
+
+        $agentId = $this->getAgentId();
+        if ($agentId !== null && $inquiry->assigned_agent_id !== $agentId) {
+            abort(403, 'Unauthorized. You do not have permission to view this inquiry.');
+        }
+
+        $this->selectedInquiry = $inquiry;
         $this->showDetailsModal = true;
     }
 
@@ -79,6 +108,11 @@ class ManageInquiries extends Component
         $id = ContactInquiry::decodeHashid($hashid);
         $inquiry = ContactInquiry::findOrFail($id);
 
+        $agentId = $this->getAgentId();
+        if ($agentId !== null && $inquiry->assigned_agent_id !== $agentId) {
+            abort(403, 'Unauthorized. You do not have access to this inquiry.');
+        }
+
         $inquiry->update(['status' => 'replied']);
 
         ActivityLog::record("Marked inquiry from '{$inquiry->name}' as replied", 'Inquiries', $inquiry->id);
@@ -103,6 +137,11 @@ class ManageInquiries extends Component
 
         $id = ContactInquiry::decodeHashid($hashid);
         $inquiry = ContactInquiry::findOrFail($id);
+
+        $agentId = $this->getAgentId();
+        if ($agentId !== null && $inquiry->assigned_agent_id !== $agentId) {
+            abort(403, 'Unauthorized. You do not have access to this inquiry.');
+        }
 
         $inquiry->update(['status' => 'closed']);
 
@@ -129,6 +168,11 @@ class ManageInquiries extends Component
         $id = ContactInquiry::decodeHashid($hashid);
         $inquiry = ContactInquiry::findOrFail($id);
 
+        $agentId = $this->getAgentId();
+        if ($agentId !== null && $inquiry->assigned_agent_id !== $agentId) {
+            abort(403, 'Unauthorized. You do not have access to this inquiry.');
+        }
+
         $inquiry->update(['status' => 'new']);
 
         ActivityLog::record("Reopened inquiry from '{$inquiry->name}' as new", 'Inquiries', $inquiry->id);
@@ -138,6 +182,35 @@ class ManageInquiries extends Component
         }
 
         session()->flash('status', "Inquiry from '{$inquiry->name}' status reset to new.");
+    }
+
+    /**
+     * Assign inquiry to an agent (Admin/Manager only).
+     */
+    public function assignAgent(string $hashid, $agentId = null): void
+    {
+        $user = auth()->user();
+        abort_unless(
+            $user && ($user->hasRole(['Super Admin', 'Admin', 'Manager']) || $user->can('manage_inquiries')),
+            403,
+            'Unauthorized. You do not have permission to assign agents.'
+        );
+
+        $id = ContactInquiry::decodeHashid($hashid);
+        $inquiry = ContactInquiry::findOrFail($id);
+
+        $agentId = (!empty($agentId) && (int) $agentId > 0) ? (int) $agentId : null;
+
+        $inquiry->update(['assigned_agent_id' => $agentId]);
+
+        $agentName = $agentId ? (Agent::find($agentId)?->name ?? 'Agent') : 'Unassigned';
+        ActivityLog::record("Assigned inquiry from '{$inquiry->name}' to {$agentName}", 'Inquiries', $inquiry->id);
+
+        if ($this->selectedInquiry && $this->selectedInquiry->id === $inquiry->id) {
+            $this->selectedInquiry->refresh();
+        }
+
+        session()->flash('status', "Inquiry from '{$inquiry->name}' assigned to {$agentName}.");
     }
 
     /**
@@ -153,6 +226,11 @@ class ManageInquiries extends Component
 
         $id = ContactInquiry::decodeHashid($hashid);
         $inquiry = ContactInquiry::findOrFail($id);
+
+        $agentId = $this->getAgentId();
+        if ($agentId !== null && $inquiry->assigned_agent_id !== $agentId) {
+            abort(403, 'Unauthorized. You do not have access to this inquiry.');
+        }
 
         $this->inquiryToDeleteId = $inquiry->id;
         $this->inquiryToDeleteName = $inquiry->name;
@@ -187,8 +265,13 @@ class ManageInquiries extends Component
         }
 
         $inquiry = ContactInquiry::findOrFail($this->inquiryToDeleteId);
-        $name = $inquiry->name;
 
+        $agentId = $this->getAgentId();
+        if ($agentId !== null && $inquiry->assigned_agent_id !== $agentId) {
+            abort(403, 'Unauthorized. You do not have access to this inquiry.');
+        }
+
+        $name = $inquiry->name;
         $inquiry->delete();
 
         ActivityLog::record("Deleted inquiry from '{$name}'", 'Inquiries', null);
@@ -210,7 +293,14 @@ class ManageInquiries extends Component
             'Unauthorized. You do not have permission to view inquiries.'
         );
 
+        $agentId = $this->getAgentId();
+        $this->agentId = $agentId;
+
         $inquiries = ContactInquiry::query()
+            ->with('assignedAgent')
+            ->when($agentId !== null, function (Builder $query) use ($agentId) {
+                $query->where('assigned_agent_id', $agentId);
+            })
             ->when(trim($this->search), function (Builder $query, string $search) {
                 $query->where(function (Builder $q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -226,8 +316,12 @@ class ManageInquiries extends Component
             ->orderByDesc('created_at')
             ->paginate(10);
 
+        $agents = ($agentId === null) ? Agent::active()->orderBy('name')->get() : collect();
+
         return view('livewire.admin.manage-inquiries', [
             'inquiries' => $inquiries,
+            'agents' => $agents,
+            'isAgentOnly' => ($agentId !== null),
         ]);
     }
 }

@@ -19,13 +19,22 @@ class Dashboard extends Component
      */
     public function render()
     {
+        $user = auth()->user();
+        $agentId = null;
+        if ($user && $user->hasRole('Agent') && !$user->hasRole(['Super Admin', 'Admin', 'Manager'])) {
+            $agent = $user->getLinkedAgent();
+            $agentId = $agent ? $agent->id : -1;
+        }
+
         // 1. Stats Cards Data
         $totalProperties = Property::count();
         $activeListings = Property::where('is_active', true)->count();
-        $pendingInquiries = ContactInquiry::where(function ($query) {
-            $query->where('status', 'new')->orWhere('status', 'pending');
-        })->count();
-        $scheduledVisits = VisitRequest::whereIn('status', ['pending', 'approved', 'scheduled'])->count();
+        $pendingInquiries = ContactInquiry::when($agentId !== null, fn($q) => $q->where('assigned_agent_id', $agentId))
+            ->where(function ($query) {
+                $query->where('status', 'new')->orWhere('status', 'pending');
+            })->count();
+        $scheduledVisits = VisitRequest::when($agentId !== null, fn($q) => $q->where('assigned_agent_id', $agentId))
+            ->whereIn('status', ['pending', 'approved', 'scheduled'])->count();
 
         // 2. Monthly Properties Added Chart Data (Current Year)
         $currentYear = (int) date('Y');
@@ -49,14 +58,16 @@ class Dashboard extends Component
             ->get();
 
         // 4. Recent Unread Inquiries (Last 3)
-        $recentInquiries = ContactInquiry::where('status', 'new')
+        $recentInquiries = ContactInquiry::when($agentId !== null, fn($q) => $q->where('assigned_agent_id', $agentId))
+            ->where('status', 'new')
             ->latest()
             ->take(3)
             ->get();
 
         // If no strictly 'new' inquiries, fallback to latest 3
         if ($recentInquiries->isEmpty()) {
-            $recentInquiries = ContactInquiry::latest()
+            $recentInquiries = ContactInquiry::when($agentId !== null, fn($q) => $q->where('assigned_agent_id', $agentId))
+                ->latest()
                 ->take(3)
                 ->get();
         }

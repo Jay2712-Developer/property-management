@@ -56,6 +56,14 @@ class Agent extends Model implements HasMedia
     }
 
     /**
+     * Relationship: Contact inquiries assigned to this agent.
+     */
+    public function contactInquiries(): HasMany
+    {
+        return $this->hasMany(ContactInquiry::class, 'assigned_agent_id');
+    }
+
+    /**
      * Scope: Filter active agents.
      */
     public function scopeActive(Builder $query): Builder

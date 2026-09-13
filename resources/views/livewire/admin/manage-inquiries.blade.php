@@ -65,6 +65,7 @@
                         <th class="py-3.5 px-4">Email</th>
                         <th class="py-3.5 px-4">Phone</th>
                         <th class="py-3.5 px-4">Subject</th>
+                        <th class="py-3.5 px-4">Assigned Agent</th>
                         <th class="py-3.5 px-4">Message</th>
                         <th class="py-3.5 px-4 text-center">Status</th>
                         <th class="py-3.5 px-4 text-right">Actions</th>
@@ -107,6 +108,30 @@
                             {{-- Subject --}}
                             <td class="py-3.5 px-4 text-xs font-medium text-gray-900 dark:text-white max-w-[150px] truncate">
                                 {{ $inquiry->subject ?: 'No subject' }}
+                            </td>
+
+                            {{-- Assigned Agent --}}
+                            <td class="py-3.5 px-4 text-xs whitespace-nowrap">
+                                @if(!$isAgentOnly && (auth()->user()?->hasRole(['Super Admin', 'Admin', 'Manager']) || auth()->user()?->can('manage_inquiries')))
+                                    <select wire:change="assignAgent('{{ $inquiry->hashid }}', $event.target.value)"
+                                            class="px-2 py-1 text-xs rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-[#141414] text-gray-900 dark:text-white focus:border-[#FF6B35] focus:outline-none transition">
+                                        <option value="">-- Unassigned --</option>
+                                        @foreach($agents as $agent)
+                                            <option value="{{ $agent->id }}" @selected($inquiry->assigned_agent_id === $agent->id)>
+                                                {{ $agent->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    @if($inquiry->assignedAgent)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#FF6B35]/10 text-[#FF6B35] border border-[#FF6B35]/20">
+                                            <i class="fa-solid fa-user-tie text-[10px]"></i>
+                                            {{ $inquiry->assignedAgent->name }}
+                                        </span>
+                                    @else
+                                        <span class="text-gray-400 italic text-[11px]">Unassigned</span>
+                                    @endif
+                                @endif
                             </td>
 
                             {{-- Message (Truncated) --}}
@@ -172,10 +197,14 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-12 text-center text-gray-400">
+                            <td colspan="9" class="py-12 text-center text-gray-400">
                                 <i class="fa-regular fa-folder-open text-3xl mb-2 text-gray-300 dark:text-gray-600"></i>
-                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">No contact inquiries found</p>
-                                <p class="text-xs text-gray-400 mt-0.5">When visitors reach out through the contact page, their messages appear here.</p>
+                                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                    {{ $isAgentOnly ? 'No inquiries assigned to you yet' : 'No contact inquiries found' }}
+                                </p>
+                                <p class="text-xs text-gray-400 mt-0.5">
+                                    {{ $isAgentOnly ? 'Inquiries assigned to you by administrators or managers will appear here.' : 'When visitors reach out through the contact page, their messages appear here.' }}
+                                </p>
                             </td>
                         </tr>
                     @endforelse
@@ -238,6 +267,10 @@
                         <div>
                             <span class="text-gray-400 uppercase text-[10px] font-bold tracking-wider block">Phone</span>
                             <span class="text-gray-700 dark:text-gray-300 font-medium">{{ $selectedInquiry->phone ?: 'None' }}</span>
+                        </div>
+                        <div class="col-span-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+                            <span class="text-gray-400 uppercase text-[10px] font-bold tracking-wider block">Assigned Agent</span>
+                            <span class="text-gray-900 dark:text-white font-semibold">{{ $selectedInquiry->assignedAgent?->name ?: 'Unassigned' }}</span>
                         </div>
                     </div>
 

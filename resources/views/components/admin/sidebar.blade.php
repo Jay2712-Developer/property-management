@@ -218,23 +218,52 @@
                     x-transition:leave-end="opacity-0 -translate-y-1"
                     class="mt-1 pl-11 pr-2 space-y-1"
                 >
+                    @php
+                        $sidebarUser = auth()->user();
+                        $sidebarAgentId = null;
+                        if ($sidebarUser && $sidebarUser->hasRole('Agent') && !$sidebarUser->hasRole(['Super Admin', 'Admin', 'Manager'])) {
+                            $sidebarAgent = $sidebarUser->getLinkedAgent();
+                            $sidebarAgentId = $sidebarAgent ? $sidebarAgent->id : -1;
+                        }
+                        $sidebarNewInquiries = \App\Models\ContactInquiry::where('status', 'new')
+                            ->when($sidebarAgentId !== null, fn($q) => $q->where('assigned_agent_id', $sidebarAgentId))
+                            ->count();
+                        $sidebarPendingVisits = \App\Models\VisitRequest::where('status', 'pending')
+                            ->when($sidebarAgentId !== null, fn($q) => $q->where('assigned_agent_id', $sidebarAgentId))
+                            ->count();
+                    @endphp
+
                     @can('view_inquiries')
                         <a 
                             href="{{ url('/admin/inquiries') }}" 
-                            class="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
+                            class="flex items-center justify-between py-2 px-3 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
                         >
-                            <i class="fa-regular fa-envelope text-[10px]"></i>
-                            <span>Contact Inquiries</span>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-envelope text-[10px]"></i>
+                                <span>Contact Inquiries</span>
+                            </div>
+                            @if($sidebarNewInquiries > 0)
+                                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-[#FF6B35] text-white">
+                                    {{ $sidebarNewInquiries > 99 ? '99+' : $sidebarNewInquiries }}
+                                </span>
+                            @endif
                         </a>
                     @endcan
 
                     @can('view_visits')
                         <a 
                             href="{{ url('/admin/visits') }}" 
-                            class="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
+                            class="flex items-center justify-between py-2 px-3 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
                         >
-                            <i class="fa-regular fa-calendar-check text-[10px]"></i>
-                            <span>Visit Requests</span>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-regular fa-calendar-check text-[10px]"></i>
+                                <span>Visit Requests</span>
+                            </div>
+                            @if($sidebarPendingVisits > 0)
+                                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-[#FF6B35] text-white">
+                                    {{ $sidebarPendingVisits > 99 ? '99+' : $sidebarPendingVisits }}
+                                </span>
+                            @endif
                         </a>
                     @endcan
                 </div>

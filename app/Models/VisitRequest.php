@@ -44,9 +44,25 @@ class VisitRequest extends Model
     /**
      * Relationship: Assigned agent handling the visit.
      */
-    public function agent(): BelongsTo
+     public function agent(): BelongsTo
+     {
+         return $this->belongsTo(Agent::class, 'assigned_agent_id');
+     }
+
+    /**
+     * Relationship alias: Assigned agent handling the visit.
+     */
+    public function assignedAgent(): BelongsTo
     {
         return $this->belongsTo(Agent::class, 'assigned_agent_id');
+    }
+
+    /**
+     * Scope: Filter by assigned agent.
+     */
+    public function scopeForAgent(Builder $query, int $agentId): Builder
+    {
+        return $query->where('assigned_agent_id', $agentId);
     }
 
     /**

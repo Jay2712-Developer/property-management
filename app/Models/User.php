@@ -87,4 +87,12 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasMany(ActivityLog::class);
     }
+
+    /**
+     * Get the linked Agent record matching this user's email address.
+     */
+    public function getLinkedAgent(): ?Agent
+    {
+        return Agent::where('email', $this->email)->first();
+    }
 }
