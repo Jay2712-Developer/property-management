@@ -57,23 +57,42 @@
             <i x-show="!darkMode" class="fa-solid fa-moon text-sm text-gray-700 transition-transform duration-200 hover:-rotate-12"></i>
         </button>
 
-        {{-- 3. Notifications Bell Dropdown (Recent Activity Logs) --}}
+        {{-- 3. Notifications Bell Dropdown (Inquiries, Visits & Recent Activity) --}}
+        @php
+            $newInquiriesCount = class_exists(\App\Models\ContactInquiry::class)
+                ? \App\Models\ContactInquiry::where('status', 'new')->count()
+                : 0;
+            $pendingVisitsCount = class_exists(\App\Models\VisitRequest::class)
+                ? \App\Models\VisitRequest::where('status', 'pending')->count()
+                : 0;
+            $totalNotificationsCount = $newInquiriesCount + $pendingVisitsCount;
+
+            $recentActivityLogs = class_exists(\App\Models\ActivityLog::class)
+                ? \App\Models\ActivityLog::with('user')->latest()->take(5)->get()
+                : collect();
+        @endphp
+
         <div x-data="{ notifOpen: false }" class="relative">
             <button 
                 @click="notifOpen = !notifOpen" 
                 @click.away="notifOpen = false" 
                 type="button" 
-                title="Notifications & Activity"
+                title="Notifications & Activity ({{ $totalNotificationsCount }} unread)"
                 class="relative w-10 h-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#0F0F0F] text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:border-[#FF6B35]/40 dark:hover:border-[#FF6B35]/40 flex items-center justify-center transition-all duration-200 shadow-xs"
                 :class="notifOpen ? 'text-[#FF6B35] border-[#FF6B35]/40 ring-2 ring-[#FF6B35]/20' : ''"
                 aria-label="Notifications"
             >
                 <i class="fa-regular fa-bell text-sm"></i>
-                {{-- Pulsing TISHA Orange Notification Dot --}}
-                <span class="absolute top-2 right-2 flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF6B35] opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FF6B35] ring-2 ring-white dark:ring-[#1A1A1A]"></span>
-                </span>
+
+                {{-- Notification Badge Count --}}
+                @if($totalNotificationsCount > 0)
+                    <span class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#FF6B35] text-[10px] font-extrabold text-white ring-2 ring-white dark:ring-[#1A1A1A]">
+                        {{ $totalNotificationsCount > 99 ? '99+' : $totalNotificationsCount }}
+                    </span>
+                @else
+                    {{-- Subtle inactive dot --}}
+                    <span class="absolute top-2 right-2 flex h-2 w-2 rounded-full bg-gray-300 dark:bg-gray-700"></span>
+                @endif
             </button>
 
             {{-- Notifications Dropdown Menu --}}
@@ -90,33 +109,67 @@
             >
                 {{-- Dropdown Header --}}
                 <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/60 dark:bg-black/20">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-bolt text-[#FF6B35] text-xs"></i>
-                        <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Activity Feed</span>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-bell text-[#FF6B35] text-xs"></i>
+                            <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">Notifications & Activity Feed</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-0.5">Live updates & alerts</p>
                     </div>
-                    <span class="text-[10px] font-semibold text-[#FF6B35] bg-[#FF6B35]/10 px-2 py-0.5 rounded-full">
-                        Live updates
-                    </span>
+                    @if($totalNotificationsCount > 0)
+                        <span class="text-[10px] font-bold text-white bg-[#FF6B35] px-2 py-0.5 rounded-full">
+                            {{ $totalNotificationsCount }} Pending
+                        </span>
+                    @else
+                        <span class="text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+                            All caught up
+                        </span>
+                    @endif
                 </div>
 
-                {{-- Activity Logs List --}}
-                @php
-                    $activityLogs = class_exists(\App\Models\ActivityLog::class)
-                        ? \App\Models\ActivityLog::with('user')->latest()->take(5)->get()
-                        : collect();
-                @endphp
+                {{-- Actionable Notification Summary Cards --}}
+                <div class="p-3 grid grid-cols-2 gap-2 bg-gray-50/40 dark:bg-black/10 border-b border-gray-100 dark:border-gray-800">
+                    {{-- New Inquiries --}}
+                    <a href="{{ route('admin.inquiries.index') }}" 
+                       class="p-2.5 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#141414] hover:border-[#FF6B35]/40 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 group-hover:text-[#FF6B35] transition">Inquiries</span>
+                            <span class="text-xs font-bold {{ $newInquiriesCount > 0 ? 'text-amber-500' : 'text-gray-400' }}">{{ $newInquiriesCount }}</span>
+                        </div>
+                        <p class="text-[11px] font-semibold text-gray-800 dark:text-gray-200 mt-1">
+                            New Messages
+                        </p>
+                    </a>
 
-                <div class="divide-y divide-gray-100 dark:divide-gray-800/60 max-h-80 overflow-y-auto">
-                    @forelse($activityLogs as $log)
-                        <div class="p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-[#FF6B35]/10 text-[#FF6B35] flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fa-solid fa-check-circle text-xs"></i>
+                    {{-- Pending Visits --}}
+                    <a href="{{ route('admin.visits.index') }}" 
+                       class="p-2.5 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-[#141414] hover:border-[#FF6B35]/40 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] uppercase font-bold text-gray-400 group-hover:text-[#FF6B35] transition">Visits</span>
+                            <span class="text-xs font-bold {{ $pendingVisitsCount > 0 ? 'text-[#FF6B35]' : 'text-gray-400' }}">{{ $pendingVisitsCount }}</span>
+                        </div>
+                        <p class="text-[11px] font-semibold text-gray-800 dark:text-gray-200 mt-1">
+                            Pending Tours
+                        </p>
+                    </a>
+                </div>
+
+                {{-- Activity Logs Feed --}}
+                <div class="divide-y divide-gray-100 dark:divide-gray-800/60 max-h-64 overflow-y-auto">
+                    <div class="px-4 py-2 bg-gray-50/30 dark:bg-black/10 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                        Recent Audit Actions
+                    </div>
+
+                    @forelse($recentActivityLogs as $log)
+                        <div class="p-3 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition flex items-start gap-2.5 text-xs">
+                            <div class="w-6 h-6 rounded-md bg-[#FF6B35]/10 text-[#FF6B35] flex items-center justify-center shrink-0 mt-0.5 text-[10px]">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
                             </div>
                             <div class="flex-1 min-w-0">
-                                <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug">
+                                <p class="font-semibold text-gray-800 dark:text-gray-200 leading-snug truncate">
                                     {{ $log->action }}
                                 </p>
-                                <div class="flex items-center gap-2 mt-1 text-[10px] text-gray-400">
+                                <div class="flex items-center gap-1.5 mt-0.5 text-[10px] text-gray-400">
                                     <span class="font-medium text-[#FF6B35]">{{ ucfirst($log->module) }}</span>
                                     <span>&bull;</span>
                                     <span>{{ $log->created_at->diffForHumans() }}</span>
@@ -124,53 +177,8 @@
                             </div>
                         </div>
                     @empty
-                        {{-- Polished Real Estate Activity Placeholders --}}
-                        <div class="p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-[#FF6B35]/10 text-[#FF6B35] flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fa-solid fa-building text-xs"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug">
-                                    New luxury villa listing created
-                                </p>
-                                <div class="flex items-center gap-2 mt-1 text-[10px] text-gray-400">
-                                    <span class="font-medium text-[#FF6B35]">Properties</span>
-                                    <span>&bull;</span>
-                                    <span>10 mins ago</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fa-regular fa-envelope text-xs"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug">
-                                    New client inquiry for Beverly Hills Penthouse
-                                </p>
-                                <div class="flex items-center gap-2 mt-1 text-[10px] text-gray-400">
-                                    <span class="font-medium text-emerald-500">Inquiries</span>
-                                    <span>&bull;</span>
-                                    <span>45 mins ago</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fa-regular fa-calendar-check text-xs"></i>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug">
-                                    Private tour scheduled for Sunset Villa
-                                </p>
-                                <div class="flex items-center gap-2 mt-1 text-[10px] text-gray-400">
-                                    <span class="font-medium text-blue-500">Visits</span>
-                                    <span>&bull;</span>
-                                    <span>2 hours ago</span>
-                                </div>
-                            </div>
+                        <div class="p-4 text-center text-xs text-gray-400">
+                            No recent activity logs recorded.
                         </div>
                     @endforelse
                 </div>
@@ -178,10 +186,10 @@
                 {{-- Dropdown Footer --}}
                 <div class="p-2.5 border-t border-gray-100 dark:border-gray-800 text-center bg-gray-50/50 dark:bg-black/20">
                     <a 
-                        href="{{ route('admin.dashboard') }}" 
+                        href="{{ route('admin.activity-logs.index') }}" 
                         class="text-[11px] font-semibold text-[#FF6B35] hover:underline"
                     >
-                        View System Activity Logs &rarr;
+                        View Complete Audit Logs &rarr;
                     </a>
                 </div>
             </div>

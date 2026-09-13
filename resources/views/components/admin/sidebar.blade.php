@@ -304,7 +304,7 @@
         @endcan
 
         {{-- ADMINISTRATION & ROLES --}}
-        @canany(['manage_roles', 'manage_settings'])
+        @canany(['manage_roles', 'manage_settings', 'view_activity_logs'])
             <p class="px-3 pt-5 text-[11px] font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider mb-2">
                 System Administration
             </p>
@@ -330,6 +330,18 @@
                 >
                     <i class="fa-solid fa-sliders w-5 text-center {{ request()->routeIs('admin.settings*') ? 'text-white' : 'text-gray-400 group-hover:text-[#FF6B35]' }} transition-colors"></i>
                     <span>Site Settings</span>
+                </a>
+            @endcan
+
+            {{-- 10. Activity Logs (Permission: view_activity_logs) --}}
+            @can('view_activity_logs')
+                <a 
+                    href="{{ route('admin.activity-logs.index') }}" 
+                    wire:navigate
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.activity-logs*') ? 'bg-[#FF6B35] text-white shadow-md shadow-[#FF6B35]/25' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-white group' }}"
+                >
+                    <i class="fa-solid fa-clock-rotate-left w-5 text-center {{ request()->routeIs('admin.activity-logs*') ? 'text-white' : 'text-gray-400 group-hover:text-[#FF6B35]' }} transition-colors"></i>
+                    <span>Activity Logs</span>
                 </a>
             @endcan
         @endcanany

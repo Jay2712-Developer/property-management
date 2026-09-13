@@ -109,6 +109,11 @@ Route::prefix('admin')
             ->middleware('permission:manage_media')
             ->name('media.index');
 
+        // System & Activity Logs
+        Route::get('/activity-logs', \App\Livewire\Admin\ManageActivityLogs::class)
+            ->middleware('permission:view_activity_logs')
+            ->name('activity-logs.index');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
