@@ -24,12 +24,14 @@ class RoleAndPermissionSeeder extends Seeder
                 'create_properties',
                 'edit_properties',
                 'delete_properties',
+                'manage_properties',
             ],
             'Agents' => [
                 'view_agents',
                 'create_agents',
                 'edit_agents',
                 'delete_agents',
+                'manage_agents',
             ],
             'Inquiries & Visits' => [
                 'view_inquiries',
