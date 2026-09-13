@@ -8,9 +8,7 @@
         ? \App\Models\Property::where('is_active', true)->count() 
         : 140;
 
-    $totalLocations = $hasLocations 
-        ? \App\Models\Location::where('is_active', true)->count() 
-        : 18;
+    $totalLocations = \App\Services\CacheService::getLocations()->count() ?: 18;
 
     $hasAgents = class_exists(\App\Models\Agent::class) && \Illuminate\Support\Facades\Schema::hasTable('agents');
     $totalAgents = $hasAgents 
