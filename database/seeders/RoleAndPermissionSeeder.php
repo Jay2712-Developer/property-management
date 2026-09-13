@@ -58,6 +58,9 @@ class RoleAndPermissionSeeder extends Seeder
             ],
             'Content & Testimonials' => [
                 'view_testimonials',
+                'create_testimonials',
+                'edit_testimonials',
+                'delete_testimonials',
                 'manage_testimonials',
                 'manage_pages',
             ],
@@ -117,6 +120,10 @@ class RoleAndPermissionSeeder extends Seeder
             'view_visits',
             'manage_visits',
             'view_testimonials',
+            'create_testimonials',
+            'edit_testimonials',
+            'delete_testimonials',
+            'manage_testimonials',
         ]);
 
         // D. Agent: View & edit properties (policy handles restricting to own listings), view inquiries & visits

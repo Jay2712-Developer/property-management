@@ -79,6 +79,21 @@ Route::prefix('admin')
             ->middleware('permission:edit_agents')
             ->name('agents.edit');
 
+        // Contact Inquiries Management
+        Route::get('/inquiries', \App\Livewire\Admin\ManageInquiries::class)
+            ->middleware('permission:view_inquiries')
+            ->name('inquiries.index');
+
+        // Visit Requests Management
+        Route::get('/visits', \App\Livewire\Admin\ManageVisitRequests::class)
+            ->middleware('permission:view_visits')
+            ->name('visits.index');
+
+        // Testimonials Management
+        Route::get('/testimonials', \App\Livewire\Admin\ManageTestimonials::class)
+            ->middleware('permission:view_testimonials')
+            ->name('testimonials.index');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
