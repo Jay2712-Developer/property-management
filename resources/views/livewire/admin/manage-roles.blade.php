@@ -17,7 +17,17 @@
             </p>
         </div>
 
-        <div>
+        <div class="flex items-center gap-3">
+            {{-- Switch to User Directory Link --}}
+            <a 
+                href="{{ route('admin.users') }}" 
+                wire:navigate
+                class="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] text-xs sm:text-sm font-semibold transition"
+            >
+                <i class="fa-solid fa-users text-xs"></i>
+                <span>Manage Users</span>
+            </a>
+
             <button 
                 wire:click="createRole" 
                 type="button" 

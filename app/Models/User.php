@@ -26,6 +26,7 @@ class User extends Authenticatable implements HasMedia
     protected $fillable = [
         'name',
         'email',
+        'is_active',
         'password',
         'google2fa_secret',
         'two_factor_secret',
@@ -63,6 +64,7 @@ class User extends Authenticatable implements HasMedia
     {
         return [
             'email_verified_at' => 'datetime',
+            'is_active' => 'boolean',
             'password' => 'hashed',
             'google2fa_secret' => 'encrypted',
             'two_factor_secret' => 'encrypted',
