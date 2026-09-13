@@ -310,10 +310,11 @@
             {{-- 8. User & Role Management (Permission: manage_roles) --}}
             @can('manage_roles')
                 <a 
-                    href="{{ url('/admin/roles') }}" 
-                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-white transition group"
+                    href="{{ route('admin.roles') }}" 
+                    wire:navigate
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.roles*') ? 'bg-[#FF6B35] text-white shadow-md shadow-[#FF6B35]/25' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-white group' }}"
                 >
-                    <i class="fa-solid fa-users-gear w-5 text-center text-gray-400 group-hover:text-[#FF6B35] transition-colors"></i>
+                    <i class="fa-solid fa-users-gear w-5 text-center {{ request()->routeIs('admin.roles*') ? 'text-white' : 'text-gray-400 group-hover:text-[#FF6B35]' }} transition-colors"></i>
                     <span>Users &amp; Roles</span>
                 </a>
             @endcan

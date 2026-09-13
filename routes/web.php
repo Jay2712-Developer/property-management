@@ -38,6 +38,9 @@ Route::prefix('admin')
         // Admin Profile 2FA Management
         Route::get('/profile/2fa', TwoFactorSettings::class)->name('profile.2fa');
 
+        // Role & Permission Management (Permission: manage_roles)
+        Route::get('/roles', \App\Livewire\Admin\ManageRoles::class)->middleware('can:manage_roles')->name('roles');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
