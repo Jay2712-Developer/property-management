@@ -60,6 +60,14 @@ Route::prefix('admin')
             ->middleware('permission:view_property_statuses')
             ->name('property-statuses.index');
 
+        // Locations & Amenities Management
+        Route::get('/locations', \App\Livewire\Admin\ManageLocations::class)
+            ->middleware('permission:view_locations')
+            ->name('locations.index');
+        Route::get('/amenities', \App\Livewire\Admin\ManageAmenities::class)
+            ->middleware('permission:view_amenities')
+            ->name('amenities.index');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
