@@ -58,6 +58,19 @@ class ContactForm extends Component
                 module: 'Inquiries',
                 recordId: $inquiry->id
             );
+
+            // Queue notification email to admin
+            try {
+                $adminEmail = config('mail.from.address') ?: 'admin@tishaproperty.com';
+                $settings = \App\Services\CacheService::getSiteSettings();
+                $adminEmail = $settings['contact_email'] ?? $settings['email'] ?? $adminEmail;
+
+                \Illuminate\Support\Facades\Mail::to($adminEmail)->queue(
+                    new \App\Mail\ContactInquiryReceived($inquiry)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Failed to queue contact inquiry notification email: ' . $e->getMessage());
+            }
         }
 
         $this->submitted = true;

@@ -52,7 +52,7 @@ class ScheduleVisitForm extends Component
         $property = Property::find($this->propertyId);
         $agentId = $property?->agent_id;
 
-        VisitRequest::create([
+        $visitRequest = VisitRequest::create([
             'property_id' => $this->propertyId,
             'name' => $this->name,
             'email' => $this->email,
@@ -67,6 +67,19 @@ class ScheduleVisitForm extends Component
             module: 'Visits',
             recordId: $this->propertyId
         );
+
+        // Queue notification email to admin
+        try {
+            $adminEmail = config('mail.from.address') ?: 'admin@tishaproperty.com';
+            $settings = \App\Services\CacheService::getSiteSettings();
+            $adminEmail = $settings['contact_email'] ?? $settings['email'] ?? $adminEmail;
+
+            \Illuminate\Support\Facades\Mail::to($adminEmail)->queue(
+                new \App\Mail\VisitRequestReceived($visitRequest, $property)
+            );
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Failed to queue visit request notification email: ' . $e->getMessage());
+        }
 
         $this->submitted = true;
         $this->reset(['name', 'email', 'phone']);
