@@ -13,8 +13,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('customer.home');
 })->name('home');
+
+Route::get('/properties', function () {
+    return redirect('/#properties');
+})->name('properties.public');
 
 // Admin Guest / Authentication Routes (Outside auth middleware)
 Route::get('/login', AdminLogin::class)->middleware('guest')->name('login');
