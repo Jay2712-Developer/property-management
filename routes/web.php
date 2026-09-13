@@ -20,6 +20,10 @@ Route::get('/properties', function () {
     return redirect('/#properties');
 })->name('properties.public');
 
+Route::get('/property/{id}', function ($id) {
+    return redirect('/#properties');
+})->name('property.show');
+
 // Admin Guest / Authentication Routes (Outside auth middleware)
 Route::get('/login', AdminLogin::class)->middleware('guest')->name('login');
 

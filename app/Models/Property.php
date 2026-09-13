@@ -38,6 +38,7 @@ class Property extends Model implements HasMedia
 
     protected $appends = [
         'hashid',
+        'primary_image_url',
     ];
 
     protected function casts(): array
@@ -100,6 +101,39 @@ class Property extends Model implements HasMedia
     public function primaryImage(): HasOne
     {
         return $this->hasOne(PropertyImage::class)->where('is_primary', true);
+    }
+
+    /**
+     * Accessor: Primary image URL.
+     */
+    public function getPrimaryImageUrlAttribute(): ?string
+    {
+        if (method_exists($this, 'getFirstMediaUrl')) {
+            $mediaUrl = $this->getFirstMediaUrl('images');
+            if ($mediaUrl) {
+                return $mediaUrl;
+            }
+
+            $propertyMedia = $this->getFirstMediaUrl('properties');
+            if ($propertyMedia) {
+                return $propertyMedia;
+            }
+        }
+
+        if ($this->relationLoaded('primaryImage') && $this->primaryImage?->image_path) {
+            return asset('storage/' . $this->primaryImage->image_path);
+        }
+
+        $primary = $this->primaryImage;
+        if ($primary?->image_path) {
+            return asset('storage/' . $primary->image_path);
+        }
+
+        if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
+            return asset('storage/' . $this->images->first()->image_path);
+        }
+
+        return null;
     }
 
     /**
