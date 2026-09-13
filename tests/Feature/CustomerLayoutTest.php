@@ -34,9 +34,9 @@ class CustomerLayoutTest extends TestCase
         $this->assertStringContainsString('font-awesome/6', $rendered);
 
         // Verify Structure: Navbar, Content, Footer
-        $this->assertStringContainsString('Schedule Tour', $rendered);
+        $this->assertStringContainsString('Book Consultation', $rendered);
         $this->assertStringContainsString('Welcome to TISHA Real Estate', $rendered);
-        $this->assertStringContainsString('TISHA Luxury Real Estate', $rendered);
+        $this->assertStringContainsString('TISHA Real Estate', $rendered);
 
         // Verify Animations: scroll-smooth & animate-fade-up
         $this->assertStringContainsString('scroll-smooth', $rendered);
