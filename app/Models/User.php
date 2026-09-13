@@ -3,7 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Traits\HasEncryptedId;
+use App\Traits\HasEncryptedRouteKey;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles, HasEncryptedId, InteractsWithMedia;
+    use HasFactory, Notifiable, HasRoles, HasEncryptedRouteKey, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.

@@ -11,7 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Enforce cookie encryption on all cookies
+        $middleware->encryptCookies(except: []);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

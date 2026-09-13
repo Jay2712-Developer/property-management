@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\HasEncryptedId;
+use App\Traits\HasEncryptedRouteKey;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Agent extends Model implements HasMedia
 {
-    use HasFactory, HasEncryptedId, InteractsWithMedia;
+    use HasFactory, HasEncryptedRouteKey, InteractsWithMedia;
 
     protected $fillable = [
         'name',
