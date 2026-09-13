@@ -120,18 +120,25 @@
                     {{-- Phone --}}
                     <div>
                         <label for="agent_phone" class="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-1.5">
-                            Direct Phone Number
+                            Direct Phone / WhatsApp Number
                         </label>
                         <div class="relative">
-                            <span class="absolute left-3.5 top-2.5 text-gray-400">
-                                <i class="fa-solid fa-phone text-xs"></i>
+                            <span class="absolute left-3.5 top-2.5 text-green-500">
+                                <i class="fab fa-whatsapp text-sm"></i>
                             </span>
                             <input type="text" id="agent_phone" wire:model="phone"
-                                   placeholder="+1 (555) 234-8900"
+                                   placeholder="919876543210"
                                    class="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-400 focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] focus:outline-none transition">
                         </div>
+                        <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-1.5 flex items-start gap-1">
+                            <i class="fab fa-whatsapp text-green-500 shrink-0 mt-px"></i>
+                            Enter WhatsApp number with country code for direct chat links &mdash;
+                            e.g. <strong class="text-gray-600 dark:text-gray-300 font-mono">919876543210</strong>
+                            (91 = India, followed by 10-digit mobile number).
+                        </p>
                         @error('phone') <p class="text-rose-500 text-xs mt-1">{{ $message }}</p> @enderror
                     </div>
+
 
                     {{-- Bio --}}
                     <div>

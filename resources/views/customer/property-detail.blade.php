@@ -38,9 +38,18 @@
     $agent = $property->agent;
     $agentName = $agent?->name ?? 'Alexander Vance';
     $agentDesignation = $agent?->designation ?? 'Senior Partner & Luxury Advisory';
-    $agentPhone = $agent?->phone ?? ($settings['phone'] ?? '+971 4 123 4567');
+    $agentPhone = $agent?->phone ?? ($settings['phone'] ?? '+91 98765 43210');
     $agentEmail = $agent?->email ?? ($settings['email'] ?? 'concierge@tisharealty.com');
     $agentPhoto = $agent?->photo_path ? asset('storage/' . $agent->photo_path) : null;
+
+    // 4. WhatsApp deeplink for the agent
+    $waAgentNumber = formatWhatsAppNumber($agentPhone);
+    $waMessage     = 'Hello, I am interested in the property: '
+        . $property->title
+        . ' (ID: ' . $property->hashid . '). Please share more details.';
+    $waAgentUrl    = $waAgentNumber
+        ? 'https://wa.me/' . $waAgentNumber . '?text=' . rawurlencode($waMessage)
+        : null;
 @endphp
 
 @section('meta_title', $property->title . ' | TISHA Real Estate')
@@ -363,14 +372,27 @@
                                 <span>Schedule a Visit</span>
                             </button>
 
-                            {{-- Contact Agent Button --}}
-                            <a 
-                                href="{{ url('/#contact') }}" 
-                                class="w-full py-3.5 rounded-2xl bg-gray-100 dark:bg-[#262626] hover:bg-gray-200 dark:hover:bg-[#333333] text-gray-800 dark:text-gray-200 text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2"
-                            >
-                                <i class="fa-regular fa-paper-plane text-sm text-[#FF6B35]"></i>
-                                <span>Contact Agent</span>
-                            </a>
+                            {{-- Chat on WhatsApp Button --}}
+                            @if($waAgentUrl)
+                                <a
+                                    href="{{ $waAgentUrl }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="w-full py-3.5 rounded-2xl bg-green-500 hover:bg-green-600 text-white text-xs font-bold uppercase tracking-wider transition shadow-lg shadow-green-500/30 flex items-center justify-center gap-2"
+                                    aria-label="Chat with agent on WhatsApp"
+                                >
+                                    <i class="fab fa-whatsapp text-base"></i>
+                                    <span>Chat on WhatsApp</span>
+                                </a>
+                            @else
+                                <a
+                                    href="mailto:{{ $agentEmail }}"
+                                    class="w-full py-3.5 rounded-2xl bg-gray-100 dark:bg-[#262626] hover:bg-gray-200 dark:hover:bg-[#333333] text-gray-800 dark:text-gray-200 text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2"
+                                >
+                                    <i class="fa-regular fa-envelope text-sm text-[#FF6B35]"></i>
+                                    <span>Contact Agent</span>
+                                </a>
+                            @endif
                         </div>
 
                         {{-- Security badge --}}

@@ -85,7 +85,7 @@ class CustomerPropertyDetailTest extends TestCase
         $response->assertSee('Julian Montgomery');
         $response->assertSee('+971 50 777 9999');
         $response->assertSee('Schedule a Visit');
-        $response->assertSee('Contact Agent');
+        $response->assertSee('Chat on WhatsApp');
         $response->assertSeeLivewire(ScheduleVisitForm::class);
     }
 

@@ -143,6 +143,16 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #FF6B35;
         }
+
+        /* WhatsApp floating button pulse ring */
+        @keyframes whatsapp-ping {
+            0%   { transform: scale(1); opacity: 0.7; }
+            70%  { transform: scale(1.55); opacity: 0; }
+            100% { transform: scale(1.55); opacity: 0; }
+        }
+        .whatsapp-ping {
+            animation: whatsapp-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
     </style>
 
     @livewireStyles
@@ -162,7 +172,32 @@
     <!-- Customer Footer -->
     <x-customer.footer />
 
-    <!-- Alpine.js & Livewire Script Hooks -->
+    {{-- ============================================================== --}}
+    {{-- FLOATING WHATSAPP BUTTON                                        --}}
+    {{-- ============================================================== --}}
+    @php
+        $waPhone = formatWhatsAppNumber($settings['phone'] ?? '');
+        $waUrl   = $waPhone ? 'https://wa.me/' . $waPhone : 'https://wa.me/';
+    @endphp
+
+    @if($waPhone)
+    <a
+        id="floating-whatsapp-btn"
+        href="{{ $waUrl }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with us on WhatsApp"
+        title="Chat with TISHA Real Estate on WhatsApp"
+        class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 text-white shadow-xl shadow-green-500/40 transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-green-400/50"
+    >
+        {{-- Pulse ring --}}
+        <span class="absolute inline-flex w-full h-full rounded-full bg-green-400 opacity-60 whatsapp-ping" aria-hidden="true"></span>
+        {{-- WhatsApp icon --}}
+        <i class="fab fa-whatsapp text-2xl relative z-10" aria-hidden="true"></i>
+    </a>
+    @endif
+
+    {{-- Alpine.js & Livewire Script Hooks --}}
     @livewireScripts
     <script>
         // Livewire 3 Page Transition & Scroll Anchor restoration

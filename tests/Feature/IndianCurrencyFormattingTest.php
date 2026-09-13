@@ -70,4 +70,39 @@ class IndianCurrencyFormattingTest extends TestCase
         $this->assertArrayHasKey('formatted_price', $array);
         $this->assertSame('₹5.00 Cr', $array['formatted_price']);
     }
+
+    // ─── WhatsApp number formatting tests ─────────────────────────────────────
+
+    public function test_whatsapp_number_strips_non_digits_and_adds_country_code(): void
+    {
+        // Bare 10-digit Indian number → prepend 91
+        $this->assertSame('919876543210', formatWhatsAppNumber('9876543210'));
+
+        // Number with dashes and spaces
+        $this->assertSame('919876543210', formatWhatsAppNumber('98765-43210'));
+        $this->assertSame('919876543210', formatWhatsAppNumber('98765 43210'));
+
+        // Number with leading +91
+        $this->assertSame('919876543210', formatWhatsAppNumber('+91 98765 43210'));
+
+        // Number already prefixed with 91 (no double prefix)
+        $this->assertSame('919876543210', formatWhatsAppNumber('919876543210'));
+
+        // Brackets and dots
+        $this->assertSame('919876543210', formatWhatsAppNumber('+91 (987) 654-3210'));
+    }
+
+    public function test_whatsapp_number_handles_empty_and_null(): void
+    {
+        $this->assertSame('', formatWhatsAppNumber(null));
+        $this->assertSame('', formatWhatsAppNumber(''));
+        $this->assertSame('', formatWhatsAppNumber('  '));
+    }
+
+    public function test_whatsapp_number_respects_custom_country_code(): void
+    {
+        // UAE country code 971
+        $this->assertSame('9714567890', formatWhatsAppNumber('4567890', '971'));
+        $this->assertSame('9714567890', formatWhatsAppNumber('9714567890', '971'));
+    }
 }

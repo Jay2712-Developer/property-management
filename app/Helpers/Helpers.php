@@ -1,5 +1,40 @@
 <?php
 
+if (!function_exists('formatWhatsAppNumber')) {
+    /**
+     * Format a phone number for use in a WhatsApp wa.me link.
+     *
+     * - Strips all non-digit characters (spaces, dashes, plus, brackets).
+     * - If the result does not already start with the given country code,
+     *   it prepends it (default '91' for India).
+     * - Falls back to an empty string if the input is empty/null.
+     *
+     * @param  string|null  $phone
+     * @param  string       $countryCode  Default '91' (India)
+     * @return string
+     */
+    function formatWhatsAppNumber(?string $phone, string $countryCode = '91'): string
+    {
+        if (empty($phone)) {
+            return '';
+        }
+
+        // Strip everything except digits
+        $digits = preg_replace('/[^0-9]/', '', $phone);
+
+        if (empty($digits)) {
+            return '';
+        }
+
+        // Prepend country code if not already present
+        if (!str_starts_with($digits, $countryCode)) {
+            $digits = $countryCode . $digits;
+        }
+
+        return $digits;
+    }
+}
+
 if (!function_exists('formatIndianCurrency')) {
     /**
      * Format a numeric amount into Indian currency notation.
