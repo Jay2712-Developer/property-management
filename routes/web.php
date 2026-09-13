@@ -24,6 +24,14 @@ Route::get('/property/{id}', function ($id) {
     return redirect('/#properties');
 })->name('property.show');
 
+Route::get('/for-sale', function () {
+    return view('customer.sales');
+})->name('sales');
+
+Route::get('/for-rent', function () {
+    return view('customer.rentals');
+})->name('rentals');
+
 // Admin Guest / Authentication Routes (Outside auth middleware)
 Route::get('/login', AdminLogin::class)->middleware('guest')->name('login');
 

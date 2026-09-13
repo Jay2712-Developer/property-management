@@ -47,10 +47,10 @@
                 <a href="{{ url('/') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
                     Home
                 </a>
-                <a href="{{ url('/#for-sale') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
+                <a href="{{ route('sales') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
                     For Sale
                 </a>
-                <a href="{{ url('/#for-rent') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
+                <a href="{{ route('rentals') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
                     For Rent
                 </a>
                 <a href="{{ url('/#about') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
@@ -123,10 +123,10 @@
             <a href="{{ url('/') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
                 Home
             </a>
-            <a href="{{ url('/#for-sale') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
+            <a href="{{ route('sales') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
                 For Sale
             </a>
-            <a href="{{ url('/#for-rent') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
+            <a href="{{ route('rentals') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
                 For Rent
             </a>
             <a href="{{ url('/#about') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
