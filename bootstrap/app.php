@@ -13,6 +13,18 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Enforce cookie encryption on all cookies
         $middleware->encryptCookies(except: []);
+
+        // Redirect unauthenticated guests to admin login
+        $middleware->redirectGuestsTo(fn () => route('admin.login'));
+
+        // Register Route Middleware Aliases
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            '2fa' => \App\Http\Middleware\TwoFactorMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

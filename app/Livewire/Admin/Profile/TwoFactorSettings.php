@@ -98,6 +98,7 @@ class TwoFactorSettings extends Component
         $this->secretKey = '';
         $this->confirmationCode = '';
 
+        session()->put('2fa.verified', true);
         session()->flash('status', 'Two-Factor Authentication has been successfully enabled!');
     }
 

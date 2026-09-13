@@ -6,28 +6,51 @@ use App\Livewire\Auth\AdminTwoFactor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+// Admin Guest / Authentication Routes (Outside auth middleware)
+Route::get('/login', AdminLogin::class)->middleware('guest')->name('login');
+
+Route::prefix('admin')->name('admin.')->middleware('guest')->group(function () {
+    Route::get('/login', AdminLogin::class)->name('login');
+    Route::get('/two-factor-challenge', AdminTwoFactor::class)->name('two-factor');
 });
 
-// Admin Authentication Routes (Guest)
-Route::middleware('guest')->group(function () {
-    Route::get('/admin/login', AdminLogin::class)->name('admin.login');
-    Route::get('/admin/two-factor-challenge', AdminTwoFactor::class)->name('admin.two-factor');
-});
+// Protected Admin Portal Routes
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['web', 'auth', 'admin', '2fa'])
+    ->group(function () {
 
-// Authenticated Admin Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+        // Admin Dashboard
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
 
-    Route::get('/admin/profile/2fa', TwoFactorSettings::class)->name('admin.profile.2fa');
+        // Admin Profile 2FA Management
+        Route::get('/profile/2fa', TwoFactorSettings::class)->name('profile.2fa');
 
-    Route::post('/admin/logout', function () {
-        Auth::logout();
-        session()->invalidate();
-        session()->regenerateToken();
-        return redirect()->route('admin.login');
-    })->name('logout');
-});
+        // Admin Logout
+        Route::post('/logout', function () {
+            Auth::logout();
+            session()->invalidate();
+            session()->regenerateToken();
+            return redirect()->route('admin.login');
+        })->name('logout');
+    });
+
+// Fallback logout route alias
+Route::post('/logout', function () {
+    Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
+    return redirect()->route('admin.login');
+})->middleware('auth')->name('logout');

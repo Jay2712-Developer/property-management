@@ -87,6 +87,7 @@ class AdminTwoFactor extends Component
         Auth::login($this->user, session()->get('login.remember', false));
         session()->forget(['login.id', 'login.remember']);
         session()->regenerate();
+        session()->put('2fa.verified', true);
 
         return $this->redirect(route('admin.dashboard'), navigate: true);
     }
