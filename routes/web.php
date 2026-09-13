@@ -20,8 +20,8 @@ Route::get('/properties', function () {
     return redirect('/#properties');
 })->name('properties.public');
 
-Route::get('/property/{id}', function ($id) {
-    return redirect('/#properties');
+Route::get('/property/{property}', function (\App\Models\Property $property) {
+    return view('customer.property-detail', compact('property'));
 })->name('property.show');
 
 Route::get('/for-sale', function () {

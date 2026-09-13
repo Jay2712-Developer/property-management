@@ -64,10 +64,21 @@ trait HasEncryptedRouteKey
         $id = static::decodeHashid((string) $value);
 
         if ($id) {
-            return $this->where($this->getKeyName(), $id)->firstOrFail();
+            $record = $this->where($this->getKeyName(), $id)->first();
+            if ($record) {
+                return $record;
+            }
         }
 
-        // 2. Friendly fallback: if the model has a slug attribute and value wasn't a Hashid
+        // 2. Direct primary key fallback if numeric
+        if (is_numeric($value)) {
+            $record = $this->where($this->getKeyName(), (int) $value)->first();
+            if ($record) {
+                return $record;
+            }
+        }
+
+        // 3. Friendly fallback: if the model has a slug attribute
         if ($this->isFillable('slug')) {
             $record = $this->where('slug', $value)->first();
             if ($record) {
