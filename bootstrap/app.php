@@ -27,5 +27,21 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Custom 403 Forbidden handler for Spatie UnauthorizedException
+        $exceptions->render(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, \Illuminate\Http\Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'User does not have the necessary permissions.',
+                    'required_permissions' => $e->getRequiredPermissions(),
+                ], 403);
+            }
+
+            $required = $e->getRequiredPermissions() ?: $e->getRequiredRoles();
+            $permissionList = !empty($required) ? implode(', ', $required) : 'restricted action';
+
+            return response()->view('errors.403', [
+                'exception' => $e,
+                'message' => "Access Denied: Your account does not possess the required permission [{$permissionList}] to access this resource.",
+            ], 403);
+        });
     })->create();

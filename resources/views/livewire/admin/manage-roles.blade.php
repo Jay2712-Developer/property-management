@@ -28,14 +28,16 @@
                 <span>Manage Users</span>
             </a>
 
-            <button 
-                wire:click="createRole" 
-                type="button" 
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF6B35] hover:bg-[#e05622] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#FF6B35]/25 transition-all duration-200 active:scale-95"
-            >
-                <i class="fa-solid fa-plus text-xs"></i>
-                <span>Create New Role</span>
-            </button>
+            @can('manage_roles')
+                <button 
+                    wire:click="createRole" 
+                    type="button" 
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF6B35] hover:bg-[#e05622] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#FF6B35]/25 transition-all duration-200 active:scale-95"
+                >
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Create New Role</span>
+                </button>
+            @endcan
         </div>
     </div>
 
@@ -178,27 +180,31 @@
                                     </span>
                                 @else
                                     <div class="flex items-center justify-end gap-2">
-                                        {{-- Edit Button (Uses Hashids) --}}
-                                        <button 
-                                            wire:click="editRole('{{ $roleHashid }}')" 
-                                            type="button" 
-                                            title="Edit Role"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:border-[#FF6B35]/40 text-xs font-semibold shadow-xs transition"
-                                        >
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                            <span>Edit</span>
-                                        </button>
+                                        {{-- Edit Button (Enforced with @can('manage_roles')) --}}
+                                        @can('manage_roles')
+                                            <button 
+                                                wire:click="editRole('{{ $roleHashid }}')" 
+                                                type="button" 
+                                                title="Edit Role"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:border-[#FF6B35]/40 text-xs font-semibold shadow-xs transition"
+                                            >
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                                <span>Edit</span>
+                                            </button>
+                                        @endcan
 
-                                        {{-- Delete Button (Uses Hashids) --}}
-                                        <button 
-                                            wire:click="confirmDelete('{{ $roleHashid }}')" 
-                                            type="button" 
-                                            title="Delete Role"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-xs font-semibold shadow-xs transition"
-                                        >
-                                            <i class="fa-regular fa-trash-can"></i>
-                                            <span>Delete</span>
-                                        </button>
+                                        {{-- Delete Button (Enforced with @can('manage_roles')) --}}
+                                        @can('manage_roles')
+                                            <button 
+                                                wire:click="confirmDelete('{{ $roleHashid }}')" 
+                                                type="button" 
+                                                title="Delete Role"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-xs font-semibold shadow-xs transition"
+                                            >
+                                                <i class="fa-regular fa-trash-can"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        @endcan
                                     </div>
                                 @endif
                             </td>

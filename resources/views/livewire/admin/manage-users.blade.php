@@ -29,14 +29,16 @@
             </a>
 
             {{-- Create New User Button --}}
-            <button 
-                wire:click="createUser" 
-                type="button" 
-                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF6B35] hover:bg-[#e05622] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#FF6B35]/25 transition-all duration-200 active:scale-95"
-            >
-                <i class="fa-solid fa-user-plus text-xs"></i>
-                <span>Create New User</span>
-            </button>
+            @can('manage_roles')
+                <button 
+                    wire:click="createUser" 
+                    type="button" 
+                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#FF6B35] hover:bg-[#e05622] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#FF6B35]/25 transition-all duration-200 active:scale-95"
+                >
+                    <i class="fa-solid fa-user-plus text-xs"></i>
+                    <span>Create New User</span>
+                </button>
+            @endcan
         </div>
     </div>
 
@@ -234,37 +236,41 @@
                             {{-- Actions --}}
                             <td class="py-4 px-6 text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    {{-- Edit User Button (Uses Encrypted Hashid) --}}
-                                    <button 
-                                        wire:click="editUser('{{ $userHashid }}')" 
-                                        type="button" 
-                                        title="Edit User"
-                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:border-[#FF6B35]/40 text-xs font-semibold shadow-xs transition"
-                                    >
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                        <span>Edit</span>
-                                    </button>
-
-                                    {{-- Delete User Button (Disabled for Self, uses Hashids) --}}
-                                    @if($isCurrentUser)
-                                        <span 
-                                            title="You cannot delete your own account"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-700 text-xs font-semibold cursor-not-allowed"
-                                        >
-                                            <i class="fa-regular fa-trash-can"></i>
-                                            <span>Delete</span>
-                                        </span>
-                                    @else
+                                    {{-- Edit User Button (Enforced with @can('manage_roles')) --}}
+                                    @can('manage_roles')
                                         <button 
-                                            wire:click="confirmDelete('{{ $userHashid }}')" 
+                                            wire:click="editUser('{{ $userHashid }}')" 
                                             type="button" 
-                                            title="Delete User"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-xs font-semibold shadow-xs transition"
+                                            title="Edit User"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1A1A] text-gray-700 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:border-[#FF6B35]/40 text-xs font-semibold shadow-xs transition"
                                         >
-                                            <i class="fa-regular fa-trash-can"></i>
-                                            <span>Delete</span>
+                                            <i class="fa-regular fa-pen-to-square"></i>
+                                            <span>Edit</span>
                                         </button>
-                                    @endif
+                                    @endcan
+
+                                    {{-- Delete User Button (Disabled for Self, Enforced with @can('manage_roles')) --}}
+                                    @can('manage_roles')
+                                        @if($isCurrentUser)
+                                            <span 
+                                                title="You cannot delete your own account"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-100 dark:border-gray-800 text-gray-300 dark:text-gray-700 text-xs font-semibold cursor-not-allowed"
+                                            >
+                                                <i class="fa-regular fa-trash-can"></i>
+                                                <span>Delete</span>
+                                            </span>
+                                        @else
+                                            <button 
+                                                wire:click="confirmDelete('{{ $userHashid }}')" 
+                                                type="button" 
+                                                title="Delete User"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-xs font-semibold shadow-xs transition"
+                                            >
+                                                <i class="fa-regular fa-trash-can"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        @endif
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

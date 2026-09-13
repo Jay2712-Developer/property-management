@@ -39,10 +39,10 @@ Route::prefix('admin')
         Route::get('/profile/2fa', TwoFactorSettings::class)->name('profile.2fa');
 
         // Role & Permission Management (Permission: manage_roles)
-        Route::get('/roles', \App\Livewire\Admin\ManageRoles::class)->middleware('can:manage_roles')->name('roles');
+        Route::get('/roles', \App\Livewire\Admin\ManageRoles::class)->middleware('permission:manage_roles')->name('roles');
 
         // User Management (Permission: manage_roles)
-        Route::get('/users', \App\Livewire\Admin\ManageUsers::class)->middleware('can:manage_roles')->name('users');
+        Route::get('/users', \App\Livewire\Admin\ManageUsers::class)->middleware('permission:manage_roles')->name('users');
 
         // Admin Logout
         Route::post('/logout', function () {
