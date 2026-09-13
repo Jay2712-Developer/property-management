@@ -110,19 +110,19 @@
                         <a href="{{ url('/') }}" class="hover:text-[#FF6B35] transition">Home</a>
                     </li>
                     <li>
-                        <a href="{{ url('/#for-sale') }}" class="hover:text-[#FF6B35] transition">For Sale</a>
+                        <a href="{{ route('sales') }}" class="hover:text-[#FF6B35] transition">For Sale</a>
                     </li>
                     <li>
-                        <a href="{{ url('/#for-rent') }}" class="hover:text-[#FF6B35] transition">For Rent</a>
+                        <a href="{{ route('rentals') }}" class="hover:text-[#FF6B35] transition">For Rent</a>
                     </li>
                     <li>
                         <a href="{{ url('/#featured') }}" class="hover:text-[#FF6B35] transition">Featured Listings</a>
                     </li>
                     <li>
-                        <a href="{{ url('/#about') }}" class="hover:text-[#FF6B35] transition">About Us</a>
+                        <a href="{{ route('about') }}" class="hover:text-[#FF6B35] transition">About Us</a>
                     </li>
                     <li>
-                        <a href="{{ url('/#contact') }}" class="hover:text-[#FF6B35] transition">Contact</a>
+                        <a href="{{ route('contact') }}" class="hover:text-[#FF6B35] transition">Contact</a>
                     </li>
                 </ul>
             </div>

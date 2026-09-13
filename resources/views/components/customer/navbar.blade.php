@@ -53,10 +53,10 @@
                 <a href="{{ route('rentals') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
                     For Rent
                 </a>
-                <a href="{{ url('/#about') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
+                <a href="{{ route('about') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1 {{ request()->routeIs('about') ? 'text-[#FF6B35] dark:text-[#FF6B35]' : '' }}">
                     About
                 </a>
-                <a href="{{ url('/#contact') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1">
+                <a href="{{ route('contact') }}" class="hover:text-[#FF6B35] dark:hover:text-[#FF6B35] transition py-1 {{ request()->routeIs('contact') ? 'text-[#FF6B35] dark:text-[#FF6B35]' : '' }}">
                     Contact
                 </a>
             </nav>
@@ -76,7 +76,7 @@
 
                 {{-- Book Consultation Button (Orange Accent) --}}
                 <a 
-                    href="{{ url('/#contact') }}" 
+                    href="{{ route('contact') }}" 
                     class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-[#FF6B35] hover:bg-[#E55A2B] shadow-sm shadow-[#FF6B35]/30 hover:shadow-[#FF6B35]/40 transition transform active:scale-95"
                 >
                     <i class="fa-regular fa-calendar-check text-xs"></i>
@@ -129,10 +129,10 @@
             <a href="{{ route('rentals') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
                 For Rent
             </a>
-            <a href="{{ url('/#about') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
+            <a href="{{ route('about') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626] {{ request()->routeIs('about') ? 'text-[#FF6B35]' : '' }}">
                 About
             </a>
-            <a href="{{ url('/#contact') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626]">
+            <a href="{{ route('contact') }}" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-lg text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#262626] {{ request()->routeIs('contact') ? 'text-[#FF6B35]' : '' }}">
                 Contact
             </a>
 
@@ -146,7 +146,7 @@
                 </a>
 
                 <a 
-                    href="{{ url('/#contact') }}" 
+                    href="{{ route('contact') }}" 
                     @click="mobileMenuOpen = false"
                     class="w-full text-center py-2.5 rounded-xl text-xs font-bold text-white bg-[#FF6B35] hover:bg-[#E55A2B] shadow-sm"
                 >

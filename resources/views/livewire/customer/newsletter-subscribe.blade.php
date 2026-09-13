@@ -22,7 +22,7 @@
                     wire:loading.attr="disabled"
                     class="absolute right-1 px-3 py-1.5 rounded-lg bg-[#FF6B35] hover:bg-[#E55A2B] text-white text-[11px] font-bold tracking-wide transition flex items-center gap-1.5 shadow-sm active:scale-95 disabled:opacity-50"
                 >
-                    <span wire:loading.remove>Join VIP</span>
+                    <span wire:loading.remove>Join</span>
                     <span wire:loading><i class="fa-solid fa-spinner fa-spin text-xs"></i></span>
                     <i wire:loading.remove class="fa-solid fa-paper-plane text-[10px]"></i>
                 </button>

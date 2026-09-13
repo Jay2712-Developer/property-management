@@ -32,6 +32,14 @@ Route::get('/for-rent', function () {
     return view('customer.rentals');
 })->name('rentals');
 
+Route::get('/about', function () {
+    return view('customer.about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('customer.contact');
+})->name('contact');
+
 // Admin Guest / Authentication Routes (Outside auth middleware)
 Route::get('/login', AdminLogin::class)->middleware('guest')->name('login');
 
