@@ -254,7 +254,7 @@
 
         {{-- CONTENT & MEDIA --}}
         {{-- 7. Pages & Media (Permission: manage_pages) --}}
-        @can('manage_pages')
+        @canany(['view_pages', 'manage_pages'])
             <p class="px-3 pt-5 text-[11px] font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider mb-2">
                 Content &amp; CMS
             </p>
@@ -284,7 +284,8 @@
                     class="mt-1 pl-11 pr-2 space-y-1"
                 >
                     <a 
-                        href="{{ url('/admin/pages') }}" 
+                        href="{{ route('admin.pages.index') }}" 
+                        wire:navigate
                         class="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#FF6B35] dark:hover:text-[#FF6B35] hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
                     >
                         <i class="fa-regular fa-file-lines text-[10px]"></i>

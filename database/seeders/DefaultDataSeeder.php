@@ -125,5 +125,40 @@ class DefaultDataSeeder extends Seeder
                 ]
             );
         }
+
+        // 5. Default CMS Pages
+        $pages = [
+            [
+                'title' => 'About Us',
+                'slug' => 'about-us',
+                'content' => '<h2>About TISHA Real Estate</h2><p>TISHA Real Estate is a leading luxury brokerage specializing in premier estates, high-end penthouses, and exclusive architectural masterworks.</p>',
+                'meta_title' => 'About Us - TISHA Real Estate',
+                'meta_description' => 'Learn more about our heritage of luxury property advisory and trusted real estate brokerage.',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'Terms of Service',
+                'slug' => 'terms-of-service',
+                'content' => '<h2>Terms of Service</h2><p>Please read these terms and conditions carefully before using our platform and engaging our brokerage advisory services.</p>',
+                'meta_title' => 'Terms of Service - TISHA Real Estate',
+                'meta_description' => 'Review the official terms of service governing usage of TISHA Real Estate web services.',
+                'is_active' => true,
+            ],
+            [
+                'title' => 'Privacy Policy',
+                'slug' => 'privacy-policy',
+                'content' => '<h2>Privacy Policy</h2><p>Your privacy is paramount to us. We adhere to the highest confidentiality standards in collecting and safeguarding your personal information.</p>',
+                'meta_title' => 'Privacy Policy - TISHA Real Estate',
+                'meta_description' => 'Understand how TISHA Real Estate collects, protects, and handles your confidential client information.',
+                'is_active' => true,
+            ],
+        ];
+
+        foreach ($pages as $pageData) {
+            \App\Models\Page::firstOrCreate(
+                ['slug' => $pageData['slug']],
+                $pageData
+            );
+        }
     }
 }

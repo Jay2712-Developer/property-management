@@ -62,6 +62,10 @@ class RoleAndPermissionSeeder extends Seeder
                 'edit_testimonials',
                 'delete_testimonials',
                 'manage_testimonials',
+                'view_pages',
+                'create_pages',
+                'edit_pages',
+                'delete_pages',
                 'manage_pages',
             ],
             'Administration & System' => [

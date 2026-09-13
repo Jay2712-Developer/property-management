@@ -99,6 +99,11 @@ Route::prefix('admin')
             ->middleware('permission:manage_settings')
             ->name('settings');
 
+        // Dynamic Pages Management
+        Route::get('/pages', \App\Livewire\Admin\ManagePages::class)
+            ->middleware('permission:view_pages')
+            ->name('pages.index');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
