@@ -30,10 +30,8 @@ Route::prefix('admin')
     ->middleware(['web', 'auth', 'admin', '2fa'])
     ->group(function () {
 
-        // Admin Dashboard
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        // Admin Dashboard (Livewire 3 Component)
+        Route::get('/dashboard', \App\Livewire\Admin\Dashboard::class)->name('dashboard');
 
         // Admin Profile 2FA Management
         Route::get('/profile/2fa', TwoFactorSettings::class)->name('profile.2fa');
