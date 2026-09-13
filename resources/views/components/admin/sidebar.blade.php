@@ -322,10 +322,11 @@
             {{-- 9. Site Settings (Permission: manage_settings) --}}
             @can('manage_settings')
                 <a 
-                    href="{{ url('/admin/settings') }}" 
-                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-white transition group"
+                    href="{{ route('admin.settings') }}" 
+                    wire:navigate
+                    class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ request()->routeIs('admin.settings*') ? 'bg-[#FF6B35] text-white shadow-md shadow-[#FF6B35]/25' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-white group' }}"
                 >
-                    <i class="fa-solid fa-sliders w-5 text-center text-gray-400 group-hover:text-[#FF6B35] transition-colors"></i>
+                    <i class="fa-solid fa-sliders w-5 text-center {{ request()->routeIs('admin.settings*') ? 'text-white' : 'text-gray-400 group-hover:text-[#FF6B35]' }} transition-colors"></i>
                     <span>Site Settings</span>
                 </a>
             @endcan

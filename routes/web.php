@@ -94,6 +94,11 @@ Route::prefix('admin')
             ->middleware('permission:view_testimonials')
             ->name('testimonials.index');
 
+        // Site Settings Management
+        Route::get('/settings', \App\Livewire\Admin\ManageSiteSettings::class)
+            ->middleware('permission:manage_settings')
+            ->name('settings');
+
         // Admin Logout
         Route::post('/logout', function () {
             Auth::logout();
